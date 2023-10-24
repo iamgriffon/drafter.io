@@ -1,0 +1,29 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider     = "mysql"
+    url          = env("DATABASE_URL")
+    relationMode = "prisma"
+}
+
+model Champion {
+    id    String @id @default(cuid())
+    name  String
+    image String
+}
+
+model Draft {
+    id     String @id @default(cuid())
+    name   String
+    link   String
+    data   Json
+    userId String
+
+    @@index([userId])
+    @@index([link])
+}
