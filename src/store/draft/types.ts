@@ -1,5 +1,9 @@
-import { type Draft, type Game, GameSeries, type MatchWinner, type Series } from "../types";
-import { type UPDATE_GAME, type UPDATE_GAME_WINNER, type UPDATE_SERIES, type UPDATE_WINNER } from "./actions";
+import { type Draft, type Game, type MatchWinner, type Series } from "../types";
+
+export const UPDATE_SERIES = "UPDATE_SERIES";
+export const UPDATE_GAME = "UPDATE_GAME";
+export const UPDATE_WINNER = "UPDATE_WINNER";
+export const UPDATE_GAME_WINNER = "UPDATE_GAME_WINNER";
 
 export interface UpdateGameAction {
   type: typeof UPDATE_GAME;
@@ -9,7 +13,10 @@ export interface UpdateGameAction {
 
 export interface UpdateSeriesAction {
   type: typeof UPDATE_SERIES;
-  payload: Series;
+  payload: {
+    games: Game[],
+    series: Series,
+  }
 };
 
 export interface UpdateGameWinnerAction {

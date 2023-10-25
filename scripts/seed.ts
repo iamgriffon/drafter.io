@@ -7,8 +7,7 @@ export async function fetchChampions() {
     .then(data => data.json());
   
   const lastest = fetchVersions[0];
-  console.log(lastest);
-
+ 
   const parsedJSON: any = await fetch(
     `http://ddragon.leagueoflegends.com/cdn/${lastest}/data/en_US/champion.json`
   ).then((data) => data.json());

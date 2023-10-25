@@ -1,25 +1,29 @@
 'use client'
 
+import { useAppContext } from "@/store/context";
+import { selectPosition } from "@/store/menu/actions";
 import { type MatchWinner, type BlueSide, type RedSide, type DraftPosition } from "@/store/types";
 import Image from "next/image";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { FaCrown } from "react-icons/fa";
 
 interface SidePicksProps {
 	side: BlueSide | RedSide;
 	isWinner: MatchWinner;
 	title: "RED SIDE" | "BLUE SIDE";
-  onSelectSlot: (param: DraftPosition) => void;
 }
 
 export function SidePicks({
   side,
   isWinner,
   title,
-  onSelectSlot
+
 }: SidePicksProps) {
 
-  const [selectSlot, setSeletedSlot] = useState<DraftPosition>()
+  const { dispatch } = useAppContext();
+
+  function onSelectSlot(position: DraftPosition) {
+    dispatch({ type: 'menu', action: selectPosition(position) })
+  };
     
   const styles = {
     red: {

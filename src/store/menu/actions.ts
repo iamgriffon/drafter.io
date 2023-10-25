@@ -1,5 +1,4 @@
-import { type UpdateSeriesAction } from "../draft/types";
-import { DraftPosition, type Champion } from "../types";
+import { DraftPosition, Series, type Champion } from "../types";
 import {
   SelectChampionAction,
   SelectPositionAction,
@@ -8,6 +7,7 @@ import {
   type UpdateChampionsAction,
   type UpdateScrimAction,
   type UpdateWinnerAction,
+  UpdateSeriesAction
 } from "./types";
 
 export const UPDATE_SERIES = "UPDATE_SERIES";
@@ -18,15 +18,6 @@ export const SEARCH_CHAMPION = "SEARCH_CHAMPION";
 export const UPDATE_SCRIM = "UPDATE_SCRIM";
 export const SELECT_CHAMPION = "SELECT_CHAMPION";
 export const SELECT_POSITION = "SELECT_POSITION";
-
-export const updateSeries = (
-  series: "BO1" | "BO3" | "BO5",
-): UpdateSeriesAction => {
-  return {
-    type: UPDATE_SERIES,
-    payload: series,
-  };
-};
 
 export const selectGame = (game: number): SelectGameAction => {
   return {
@@ -60,7 +51,7 @@ export const searchChampion = (search: string): SearchChampionAction => {
   };
 };
 
-export const updateScrim = (scrim: boolean): UpdateScrimAction => {
+export const switchScrim = (scrim: boolean): UpdateScrimAction => {
   return {
     type: UPDATE_SCRIM,
     payload: scrim,
@@ -82,3 +73,10 @@ export const selectPosition = (
     payload: position,
   };
 };
+
+export const updateSeries = (series: Series): UpdateSeriesAction => {
+  return {
+    type: 'UPDATE_SERIES',
+    payload: series
+  }
+}

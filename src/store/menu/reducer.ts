@@ -31,6 +31,7 @@ export const menuReducer = (
     case UPDATE_SERIES:
       return {
         ...state,
+        game: 1,
         series: action.payload,
       };
     case SELECT_GAME:

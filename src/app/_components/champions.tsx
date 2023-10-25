@@ -5,16 +5,18 @@ import { type Champion } from "@/store/types";
 import Image from "next/image";
 
 interface ChampionListProps {
+  champions: Champion[]
   onSelectChampion: (param: Champion) => void;
 }
 
 export function ChampionList({
+  champions,
   onSelectChampion
 }: ChampionListProps){
 
   const { state } = useAppContext();
 
-  const { search, selected, champions } = state.menu;
+  const { search, selected } = state.menu;
 
   const filteredChampions = [...champions].length
   ? champions.filter((champion) =>
