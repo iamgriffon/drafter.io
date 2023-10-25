@@ -1,4 +1,4 @@
-import { type Game, type GameSeries } from "@/types/draft";
+import { type Game, type GameSeries } from "@/store/types";
 
 const isEmptyGame = (game: Game): boolean => {
   const { blueSide, redSide, winner } = game;
@@ -11,16 +11,16 @@ const isEmptyGame = (game: Game): boolean => {
   );
 };
 
-const isIncompleteGame = (game: Game): boolean => {
-  const { blueSide, redSide, winner } = game;
-  const isBlueIncomplete =
-		blueSide.picks.some((pick) => !pick.champion.name) ||
-		blueSide.bans.some((ban) => !ban.champion.name);
-  const isRedIncomplete =
-		redSide.picks.some((pick) => !pick.champion.name) ||
-		redSide.bans.some((ban) => !ban.champion.name);
-  return (isBlueIncomplete || isRedIncomplete) && winner === null;
-};
+// const isIncompleteGame = (game: Game): boolean => {
+//   const { blueSide, redSide, winner } = game;
+//   const isBlueIncomplete =
+// 		blueSide.picks.some((pick) => !pick.champion.name) ||
+// 		blueSide.bans.some((ban) => !ban.champion.name);
+//   const isRedIncomplete =
+// 		redSide.picks.some((pick) => !pick.champion.name) ||
+// 		redSide.bans.some((ban) => !ban.champion.name);
+//   return (isBlueIncomplete || isRedIncomplete) && winner === null;
+// };
 
 const isCompleteGame = (game: Game): boolean => {
   const { blueSide, redSide, winner } = game;

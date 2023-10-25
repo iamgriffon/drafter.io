@@ -1,39 +1,39 @@
 import { DEFAULT_BO1_STATE } from "@/utils/setDefaultValues";
-import { UPDATE_GAME, UPDATE_GAME_WINNER, UPDATE_SERIES, UPDATE_WINNER, type DraftActions } from "./types";
+import {
+  PURGE_WINNERS,
+  UPDATE_GAME,
+  UPDATE_GAME_WINNER,
+  UPDATE_SERIES,
+  UPDATE_WINNER,
+  type DraftActions,
+} from "./types";
 import { type GameSeries } from "../types";
 
 export const initialDraftState: GameSeries = DEFAULT_BO1_STATE;
 
-export const draftReducer = (state: GameSeries = initialDraftState, action: DraftActions) => {
+export const draftReducer = (
+  state: GameSeries = initialDraftState,
+  action: DraftActions,
+) => {
   switch (action.type) {
     case UPDATE_GAME:
+    case UPDATE_GAME_WINNER:
+    case PURGE_WINNERS:
       return {
         ...state,
-        games: action.payload
+        games: action.payload,
       };
     case UPDATE_SERIES:
       return {
         ...state,
         series: action.payload.series,
-        games: action.payload.games
+        games: action.payload.games,
       };
-      case UPDATE_WINNER: 
-        return {
-          ...state,
-          winner: action.payload
-        }
-      case UPDATE_GAME_WINNER: 
-      const currentGames = [...state.games];
-      let gameToUpdate = currentGames[action.gameIndex]!
-      gameToUpdate = {
-        ...gameToUpdate,
-        winner: action.payload,
-      };
+    case UPDATE_WINNER:
       return {
         ...state,
-        games: currentGames,
+        winner: action.payload,
       };
-
     default:
       return state;
   }

@@ -1,8 +1,7 @@
 import { useAppContext } from "@/store/context";
 import { selectPosition } from "@/store/menu/actions";
-import { type BlueSide, Draft, type DraftPosition, type RedSide } from "@/store/types";
+import { type BlueSide, type DraftPosition, type RedSide } from "@/store/types";
 import Image from "next/image";
-import { type Dispatch, type SetStateAction } from "react";
 
 interface RedSideBansProps {
 	side: BlueSide | RedSide;
@@ -16,7 +15,6 @@ export function SideBans({ side }: RedSideBansProps) {
     dispatch({ type: 'menu', action: selectPosition(position) })
   };
     
-
   return (
     <div className="flex gap-3.5 -mt-3">
       {side.bans.map((ban, index) => (
@@ -26,14 +24,14 @@ export function SideBans({ side }: RedSideBansProps) {
         >
           <button
             className="border-4 border-gray-400 w-14 h-14 bg-slate-600 focus:border-gray-300"
-            onClick={() => onSelectSlot(ban!.position)}
+            onClick={() => onSelectSlot(ban.position)}
           >
-            {ban!.champion.image.length >= 1 ? (
+            {ban.champion.image.length >= 1 ? (
               <Image
-                src={ban!.champion.image}
+                src={ban.champion.image}
                 width={90}
                 height={90}
-                alt={ban!.champion.name}
+                alt={ban.champion.name}
               />
             ) : (
               <Image

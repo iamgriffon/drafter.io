@@ -5,8 +5,8 @@ import {
   type Series,
 } from "../types";
 import {
-  SELECT_CHAMPION,
-  SELECT_POSITION,
+  type SELECT_CHAMPION,
+  type SELECT_POSITION,
   type SEARCH_CHAMPION,
   type SELECT_GAME,
   type UPDATE_CHAMPIONS,
@@ -75,10 +75,10 @@ export type MenuActions =
   | UpdateScrimAction
   | SearchChampionAction
   | UpdateWinnerAction
-  | SearchChampionAction
   | SelectPositionAction
   | SelectChampionAction;
 
+/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 export type MenuPayloadTypes =
   | Series
   | number

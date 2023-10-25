@@ -1,19 +1,13 @@
 'use client'
 
 import { useAppContext } from "@/store/context";
-import { searchChampion, selectChampion, selectGame, selectPosition, updateChampions, updateSeries } from "@/store/menu/actions";
-import { SidePicks } from "./_components/picks";
-import { SearchBox } from "./_components/search";
-import { ChampionList } from "./_components/champions";
-import { Champion, DraftPosition, Series } from "@/store/types";
-import { useEffect, useState } from "react";
+import { searchChampion, selectChampion, selectGame, selectPosition, updateChampions, updateSeries, updateWinner } from "@/store/menu/actions";
+import { type Champion, type DraftPosition, type MatchWinner, type Series } from "@/store/types";
+import { useCallback, useEffect } from "react";
 import { api } from "@/trpc/react";
-import { updateDraft, updateDraftSeries } from "@/store/draft/actions";
+import { updateDraft, updateDraftSeries, updateGameWinner } from "@/store/draft/actions";
 import { DEFAULT_CHAMPION_STATE } from "@/utils/setDefaultValues";
-import { SideBans } from "./_components/bans";
-import { Switch } from "./_components/switch";
-import { SeriesPicker } from "./_components/gameoption";
-import { GamePickerButtons } from "./_components/gameselector";
+import { ChampionList, GameIndicator, GamePickerButtons, SearchBox, SeriesPicker, SideBans, SidePicks, Switch, WinnerPicker } from '@/app/components'
 
 export default function Home() {
 
@@ -26,15 +20,19 @@ export default function Home() {
   });
 
   const fetchData = async () => {
-    const callback = await championData.refetch();
-    if (callback.data) {
-      const newData = callback.data.map(champ => {
-        return {
-          ...champ,
-          draftable: true
-        }
-      });
-      dispatch({ type: 'menu', action: updateChampions(newData as Champion[]) })
+    try {
+      const callback = await championData.refetch();
+      if (callback.data) {
+        const newData = callback.data.map(champ => {
+          return {
+            ...champ,
+            draftable: true
+          }
+        });
+        dispatch({ type: 'menu', action: updateChampions(newData as Champion[]) })
+      }
+    } catch (err){
+      console.error(err);
     }
   };
 
@@ -61,8 +59,12 @@ export default function Home() {
   function onSelectSeries(param: Series) {
     dispatch({ type: 'draft', action: updateDraftSeries(state.draft, param) });
     dispatch({ type: 'menu', action: updateSeries(param) });
-    dispatch({type: 'menu', action: selectGame(1)})
+    dispatch({ type: 'menu', action: selectGame(1) })
   };
+
+  function onSelectWinner(param: MatchWinner) {
+    dispatch({ type: 'draft', action: updateGameWinner(state.draft, currentGame, param) });
+  }
 
   function onDraftChampion() {
     if (champion.id.length > 0 && position != null) {
@@ -76,7 +78,14 @@ export default function Home() {
   useEffect(() => {
     onDraftChampion();
     return () => onDraftChampion();
-  }, [onSelectChampion, onSelectSlot, onSelectGame]);
+  }, [onSelectChampion, onSelectSlot, onSelectGame, onDraftChampion]);
+
+  useEffect(() => {
+    if (menu.winner !== 'none') {
+      dispatch({ type: 'draft', action: updateGameWinner(state.draft, currentGame, menu.winner) });
+      dispatch({ type: 'menu', action: updateWinner('none') });
+    };
+  }, [menu.winner, onSelectWinner])
 
   const updatedSide = (game: number) => {
     return draft.games[game - 1]!
@@ -84,7 +93,7 @@ export default function Home() {
 
   const updatedChampions = () => {
     const currentMatch = draft.games.find(game => game.game === currentGame)!;
-    if (currentMatch){
+    if (currentMatch) {
       const updatedChampions = champions.map(champ => {
         const isDrafted = currentMatch.redSide.picks.some((pick) => pick.champion.id === champ.id) ||
           currentMatch.redSide.bans.some((ban) => ban.champion.id === champ.id) ||
@@ -99,13 +108,23 @@ export default function Home() {
     }
   }
 
+  const updatedGames = useCallback(() => {
+    return draft.games
+  }, [fetchData, onSelectChampion, onSelectSlot, onSelectGame, onSelectWinner])
+
+
   return (
     <main className="flex flex-col items-center gap-8">
-      <header className="flex self-center items-center w-full gap-8 max-w-5xl">
+      <nav>
+
+      </nav>
+      <header className="flex self-center items-center gap-8  max-w-[100vw]">
         <Switch />
         <SearchBox value={menu.search} onChangeValue={onSearch} />
         <SeriesPicker onSelectSeries={onSelectSeries} />
-        <GamePickerButtons onSelectGame={onSelectGame} />
+        <GamePickerButtons games={updatedGames()} onSelectMatch={onSelectGame} />
+        <WinnerPicker onSelectWinner={onSelectWinner} />
+        <GameIndicator />
       </header>
       <section className="flex gap-8">
         <SidePicks side={updatedSide(menu.game).blueSide} title='BLUE SIDE' isWinner={draft.winner} />

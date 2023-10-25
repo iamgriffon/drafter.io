@@ -1,5 +1,5 @@
 import { useAppContext } from "@/store/context";
-import { Series } from "@/store/types";
+import { type Series } from "@/store/types";
 
 interface SeriesPickerProps {
   onSelectSeries: (param: Series) => void;

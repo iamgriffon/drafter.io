@@ -1,13 +1,13 @@
-import { DraftPosition, Series, type Champion } from "../types";
+import { type DraftPosition, type Series, type Champion } from "../types";
 import {
-  SelectChampionAction,
-  SelectPositionAction,
+  type SelectChampionAction,
+  type SelectPositionAction,
   type SearchChampionAction,
   type SelectGameAction,
   type UpdateChampionsAction,
   type UpdateScrimAction,
   type UpdateWinnerAction,
-  UpdateSeriesAction
+  type UpdateSeriesAction
 } from "./types";
 
 export const UPDATE_SERIES = "UPDATE_SERIES";

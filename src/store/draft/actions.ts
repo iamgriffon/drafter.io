@@ -1,15 +1,17 @@
 import { DEFAULT_BO3_STATE, DEFAULT_BO5_STATE } from "@/utils/setDefaultValues";
 import {
-  Series,
+  type Series,
   type Champion,
   type DraftPosition,
   type GameSeries,
   type MatchWinner,
 } from "../types";
 import {
-  UpdateSeriesAction,
+  PURGE_WINNERS,
   UPDATE_GAME_WINNER,
   UPDATE_SERIES,
+  type PurgeGamesWinnersAction,
+  type UpdateSeriesAction,
   type UpdateGameAction,
   type UpdateGameWinnerAction,
 } from "./types";
@@ -38,8 +40,8 @@ export const updateDraft = (
       const updatedGame = {
         ...gameToUpdate,
         [sideToUpdate]: {
-          ...gameToUpdate![sideToUpdate],
-          [pickOrBan]: gameToUpdate![sideToUpdate][pickOrBan].map((draft) => {
+          ...gameToUpdate[sideToUpdate],
+          [pickOrBan]: gameToUpdate[sideToUpdate][pickOrBan].map((draft) => {
             if (draft.position === position) {
               return {
                 ...draft,
@@ -62,13 +64,31 @@ export const updateDraft = (
 };
 
 export const updateGameWinner = (
+  state: GameSeries,
   gameIndex: number,
   winner: MatchWinner,
 ): UpdateGameWinnerAction => {
+  const updatedGames = [...state.games];
+  const gameIndexToUpdate = updatedGames.findIndex(
+    (game) => game.game === gameIndex,
+  );
+
+  if (gameIndexToUpdate !== -1) {
+    const gameToUpdate = { ...updatedGames[gameIndexToUpdate]! };
+    gameToUpdate.winner = winner;
+    updatedGames[gameIndexToUpdate] = gameToUpdate;
+
+    return {
+      type: UPDATE_GAME_WINNER,
+      gameIndex,
+      payload: updatedGames,
+    };
+  }
+  
   return {
     type: UPDATE_GAME_WINNER,
     gameIndex,
-    payload: winner,
+    payload: state.games,
   };
 };
 
@@ -78,32 +98,32 @@ export const updateDraftSeries = (
 ): UpdateSeriesAction => {
   let currentGames = state.games.slice();
 
- if (currentGames.length > 0){
-  if (series === "BO1") {
-    return {
-      type: "UPDATE_SERIES",
-      payload: {
-        series,
-        games: currentGames.slice(0, 1),
-      },
+  if (currentGames.length > 0) {
+    if (series === "BO1") {
+      return {
+        type: "UPDATE_SERIES",
+        payload: {
+          series,
+          games: currentGames.slice(0, 1),
+        },
+      };
+    }
+
+    const enumMap = {
+      BO1: 1,
+      BO3: 3,
+      BO5: 5,
     };
-  }
 
-  const enumMap = {
-    BO1: 1,
-    BO3: 3,
-    BO5: 5,
-  };
-
-  if (currentGames.length > enumMap[series]) {
-    currentGames.length = enumMap[series];
-  } else if (series === "BO3" || series === "BO5") {
-    const defaultGames =
-      series === "BO3" ? DEFAULT_BO3_STATE.games : DEFAULT_BO5_STATE.games;
-    const diff = enumMap[series] - currentGames.length;
-    currentGames = currentGames.concat(defaultGames.slice(diff * -1));
+    if (currentGames.length > enumMap[series]) {
+      currentGames.length = enumMap[series];
+    } else if (series === "BO3" || series === "BO5") {
+      const defaultGames =
+        series === "BO3" ? DEFAULT_BO3_STATE.games : DEFAULT_BO5_STATE.games;
+      const diff = enumMap[series] - currentGames.length;
+      currentGames = currentGames.concat(defaultGames.slice(diff * -1));
+    }
   }
- }
 
   return {
     type: UPDATE_SERIES,
@@ -113,3 +133,20 @@ export const updateDraftSeries = (
     },
   };
 };
+
+export const purgeDraftWinner = (state: GameSeries): PurgeGamesWinnersAction => {
+
+  const winner: MatchWinner = "none"
+
+  const currentGames = [...state.games].map(game => {
+    return {
+      ...game,
+      winner
+    }
+  })
+  
+  return {
+    type: PURGE_WINNERS,
+    payload: currentGames
+  }
+}
