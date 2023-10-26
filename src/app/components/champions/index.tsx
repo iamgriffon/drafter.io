@@ -41,6 +41,7 @@ export function ChampionList({
                   height={75}
                   src={champion.image}
                   alt={champion.name}
+                  priority
                 />
               )}{" "}
               {champion.draftable === false && (
@@ -50,6 +51,7 @@ export function ChampionList({
                   src={champion.image}
                   alt={champion.name}
                   className="grayscale"
+                  priority
                 />
               )}
             </div>
