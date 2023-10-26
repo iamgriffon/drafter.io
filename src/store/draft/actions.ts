@@ -10,13 +10,17 @@ import {
   PURGE_WINNERS,
   UPDATE_GAME_WINNER,
   UPDATE_SERIES,
+  UPDATE_ID,
   type PurgeGamesWinnersAction,
   type UpdateSeriesAction,
   type UpdateGameAction,
   type UpdateGameWinnerAction,
+  UpdateDraftIDAction,
+  UpdateDraftAction,
+  UPDATE_DRAFT,
 } from "./types";
 
-export const updateDraft = (
+export const updateDraftPicks = (
   state: GameSeries,
   gameIndex: number,
   position: DraftPosition,
@@ -63,7 +67,7 @@ export const updateDraft = (
   };
 };
 
-export const updateGameWinner = (
+export const updateDraftGameWinner = (
   state: GameSeries,
   gameIndex: number,
   winner: MatchWinner,
@@ -135,9 +139,7 @@ export const updateDraftSeries = (
 };
 
 export const purgeDraftWinner = (state: GameSeries): PurgeGamesWinnersAction => {
-
   const winner: MatchWinner = "none"
-
   const currentGames = [...state.games].map(game => {
     return {
       ...game,
@@ -148,5 +150,19 @@ export const purgeDraftWinner = (state: GameSeries): PurgeGamesWinnersAction => 
   return {
     type: PURGE_WINNERS,
     payload: currentGames
+  }
+}
+
+export const updateDraftID = (id: string): UpdateDraftIDAction => {
+  return {
+    type: UPDATE_ID,
+    payload: id
+  }
+}
+
+export const updateFullDraft = (Draft: GameSeries): UpdateDraftAction => {
+  return {
+    type: UPDATE_DRAFT,
+    payload: Draft
   }
 }

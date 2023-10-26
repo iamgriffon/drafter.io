@@ -11,7 +11,10 @@ const config = {
       {
         protocol: 'http',
         hostname: 'ddragon.leagueoflegends.com',
-        
+      },
+      {
+        protocol: 'https',
+        hostname: 'img.clerk.com'
       }
     ]
   }

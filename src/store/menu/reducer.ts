@@ -1,4 +1,6 @@
 import {
+  type MenuActions,
+  type MenuProps,
   UPDATE_SERIES,
   SELECT_GAME,
   UPDATE_CHAMPIONS,
@@ -7,8 +9,8 @@ import {
   UPDATE_SCRIM,
   SELECT_CHAMPION,
   SELECT_POSITION,
-} from "./actions";
-import { type MenuActions, type MenuProps } from "./types";
+  STORE_DRAFTS,
+} from "./types";
 
 export const initialMenuState: MenuProps = {
   champions: [],
@@ -21,6 +23,7 @@ export const initialMenuState: MenuProps = {
     champion: { id: "", draftable: null, image: "", name: "" },
     position: null,
   },
+  drafts: [],
 };
 
 export const menuReducer = (
@@ -28,6 +31,11 @@ export const menuReducer = (
   action: MenuActions,
 ) => {
   switch (action.type) {
+    case STORE_DRAFTS:
+      return {
+        ...state,
+        drafts: action.payload
+      }
     case UPDATE_SERIES:
       return {
         ...state,

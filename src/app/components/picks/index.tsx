@@ -37,7 +37,7 @@ export function SidePicks({
   };
 
   return (
-    <div className="flex flex-col justify-center text-2xl mt-4 gap-10">
+    <div className="flex flex-col justify-center text-2xl gap-8">
       <div className={title === "BLUE SIDE" ? styles.blue.main: styles.red.main}>
         <h1 className="font-bold">{title}</h1>
       </div>
@@ -47,30 +47,30 @@ export function SidePicks({
           className={title === "BLUE SIDE" ? styles.blue.picks : styles.red.picks}
           key={index}
         >
-          {title === "BLUE SIDE" ? <span>{pick.position}</span> : null}
+          {title === "BLUE SIDE" ? <span className="text-xl text-right">{pick.position}</span> : null}
           <button
-            className="border-4 rounded-full border-gray-400 w-20 h-20 bg-slate-600 focus:border-gray-300"
+            className="border-4 rounded-full border-gray-400 w-18 h-18 bg-slate-600 focus:border-gray-300"
             onClick={() => onSelectSlot(pick.position)}
           >
             {pick.champion.image.length >= 1 ? (
               <Image
                 src={pick.champion.image}
                 className="rounded-full"
-                width={90}
-                height={90}
+                width={70}
+                height={70}
                 alt={pick.champion.name}
               />
             ) : (
               <Image
                 src="/champion_placeholder.webp"
-                width={90}
-                height={90}
+                width={70}
+                height={70}
                 alt="placeholder"
                 className="rounded-full"
               />
             )}
           </button>
-          {title === "RED SIDE" ? <span>{pick.position}</span> : null}
+          {title === "RED SIDE" ? <span className="text-xl text-left">{pick.position}</span> : null}
         </div>
       ))}
     </div>

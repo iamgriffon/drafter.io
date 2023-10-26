@@ -1,8 +1,10 @@
 import { DEFAULT_BO1_STATE } from "@/utils/setDefaultValues";
 import {
   PURGE_WINNERS,
+  UPDATE_DRAFT,
   UPDATE_GAME,
   UPDATE_GAME_WINNER,
+  UPDATE_ID,
   UPDATE_SERIES,
   UPDATE_WINNER,
   type DraftActions,
@@ -34,6 +36,15 @@ export const draftReducer = (
         ...state,
         winner: action.payload,
       };
+    case UPDATE_ID:
+      return {
+        ...state,
+        id: action.payload,
+      };
+    case UPDATE_DRAFT:
+      return {
+        ...action.payload
+      }
     default:
       return state;
   }

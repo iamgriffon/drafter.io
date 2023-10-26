@@ -1,3 +1,4 @@
+import { type Draft } from "@prisma/client";
 import { type DraftPosition, type Series, type Champion } from "../types";
 import {
   type SelectChampionAction,
@@ -7,17 +8,18 @@ import {
   type UpdateChampionsAction,
   type UpdateScrimAction,
   type UpdateWinnerAction,
-  type UpdateSeriesAction
+  type UpdateSeriesAction,
+  SEARCH_CHAMPION,
+  SELECT_CHAMPION,
+  SELECT_GAME,
+  UPDATE_CHAMPIONS,
+  UPDATE_SCRIM,
+  UPDATE_WINNER,
+  StoreDraftsAction,
+  SELECT_POSITION,
+  UPDATE_SERIES,
+  STORE_DRAFTS
 } from "./types";
-
-export const UPDATE_SERIES = "UPDATE_SERIES";
-export const SELECT_GAME = "SELECT_GAME";
-export const UPDATE_CHAMPIONS = "UPDATE_CHAMPIONS";
-export const UPDATE_WINNER = "UPDATE_WINNER";
-export const SEARCH_CHAMPION = "SEARCH_CHAMPION";
-export const UPDATE_SCRIM = "UPDATE_SCRIM";
-export const SELECT_CHAMPION = "SELECT_CHAMPION";
-export const SELECT_POSITION = "SELECT_POSITION";
 
 export const selectGame = (game: number): SelectGameAction => {
   return {
@@ -35,7 +37,7 @@ export const updateChampions = (
   };
 };
 
-export const updateWinner = (
+export const updateMenuGameWinner = (
   winner: "red" | "blue" | "none",
 ): UpdateWinnerAction => {
   return {
@@ -69,14 +71,21 @@ export const selectPosition = (
   position: DraftPosition | null,
 ): SelectPositionAction => {
   return {
-    type: "SELECT_POSITION",
+    type: SELECT_POSITION,
     payload: position,
   };
 };
 
-export const updateSeries = (series: Series): UpdateSeriesAction => {
+export const updateMenuSeries = (series: Series): UpdateSeriesAction => {
   return {
-    type: 'UPDATE_SERIES',
+    type: UPDATE_SERIES,
     payload: series
+  }
+}
+
+export const storeDrafts = (drafts: Draft[]): StoreDraftsAction => {
+  return {
+    type: STORE_DRAFTS,
+    payload: drafts
   }
 }

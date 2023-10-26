@@ -52,6 +52,7 @@ export const DEFAULT_GAME_STATE: Game = {
 export const DEFAULT_BO1_STATE: GameSeries = {
   series: "BO1",
   winner: "none",
+  id: '',
   games: [
     {
       game: 1,

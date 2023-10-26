@@ -1,13 +1,13 @@
 'use client'
 
 import { useAppContext } from "@/store/context";
-import { searchChampion, selectChampion, selectGame, selectPosition, updateChampions, updateSeries, updateWinner } from "@/store/menu/actions";
+import { searchChampion, selectChampion, selectGame, selectPosition, updateChampions, updateMenuSeries, updateMenuGameWinner } from "@/store/menu/actions";
 import { type Champion, type DraftPosition, type MatchWinner, type Series } from "@/store/types";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { api } from "@/trpc/react";
-import { updateDraft, updateDraftSeries, updateGameWinner } from "@/store/draft/actions";
+import { updateDraftPicks, updateDraftSeries, updateDraftGameWinner } from "@/store/draft/actions";
 import { DEFAULT_CHAMPION_STATE } from "@/utils/setDefaultValues";
-import { ChampionList, GameIndicator, GamePickerButtons, SearchBox, SeriesPicker, SideBans, SidePicks, Switch, WinnerPicker } from '@/app/components'
+import { ChampionList, GameIndicator, GamePickerButtons, NavBar, SearchBox, SeriesPicker, SideBans, SidePicks, Switch, WinnerPicker } from '@/app/components'
 
 export default function Home() {
 
@@ -18,27 +18,6 @@ export default function Home() {
   const championData = api.champion.fetchChampions.useQuery(undefined, {
     enabled: false
   });
-
-  const fetchData = async () => {
-    try {
-      const callback = await championData.refetch();
-      if (callback.data) {
-        const newData = callback.data.map(champ => {
-          return {
-            ...champ,
-            draftable: true
-          }
-        });
-        dispatch({ type: 'menu', action: updateChampions(newData as Champion[]) })
-      }
-    } catch (err){
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   function onSearch(input: string) {
     dispatch({ type: 'menu', action: searchChampion(input) })
@@ -54,42 +33,31 @@ export default function Home() {
 
   function onSelectGame(game: number) {
     dispatch({ type: 'menu', action: selectGame(game) });
-  }
+    dispatch({ type: 'menu', action: selectChampion(DEFAULT_CHAMPION_STATE) });
+  };
 
   function onSelectSeries(param: Series) {
     dispatch({ type: 'draft', action: updateDraftSeries(state.draft, param) });
-    dispatch({ type: 'menu', action: updateSeries(param) });
+    dispatch({ type: 'menu', action: updateMenuSeries(param) });
     dispatch({ type: 'menu', action: selectGame(1) })
   };
 
   function onSelectWinner(param: MatchWinner) {
-    dispatch({ type: 'draft', action: updateGameWinner(state.draft, currentGame, param) });
-  }
+    dispatch({ type: 'draft', action: updateDraftGameWinner(state.draft, currentGame, param) });
+  };
 
   function onDraftChampion() {
     if (champion.id.length > 0 && position != null) {
-      dispatch({ type: 'draft', action: updateDraft(state.draft, menu.game, position, champion) });
+      dispatch({ type: 'draft', action: updateDraftPicks(state.draft, menu.game, position, champion) });
       dispatch({ type: 'menu', action: selectGame(currentGame) });
       dispatch({ type: 'menu', action: selectChampion(DEFAULT_CHAMPION_STATE) });
       dispatch({ type: 'menu', action: selectPosition(null) });
     }
   };
 
-  useEffect(() => {
-    onDraftChampion();
-    return () => onDraftChampion();
-  }, [onSelectChampion, onSelectSlot, onSelectGame, onDraftChampion]);
-
-  useEffect(() => {
-    if (menu.winner !== 'none') {
-      dispatch({ type: 'draft', action: updateGameWinner(state.draft, currentGame, menu.winner) });
-      dispatch({ type: 'menu', action: updateWinner('none') });
-    };
-  }, [menu.winner, onSelectWinner])
-
   const updatedSide = (game: number) => {
     return draft.games[game - 1]!
-  }
+  };
 
   const updatedChampions = () => {
     const currentMatch = draft.games.find(game => game.game === currentGame)!;
@@ -106,18 +74,49 @@ export default function Home() {
     } else {
       return champions
     }
-  }
+  };
+
+  async function fetchData() {
+    try {
+      const callback = await championData.refetch();
+      if (callback.data) {
+        const newData = callback.data.map(champ => {
+          return {
+            ...champ,
+            draftable: true
+          }
+        });
+        dispatch({ type: 'menu', action: updateChampions(newData as Champion[]) })
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    onDraftChampion();
+    return () => onDraftChampion();
+  }, [onSelectChampion, onSelectSlot, onSelectGame, onDraftChampion]);
+
+  useEffect(() => {
+    if (menu.winner !== 'none') {
+      dispatch({ type: 'draft', action: updateDraftGameWinner(state.draft, currentGame, menu.winner) });
+      dispatch({ type: 'menu', action: updateMenuGameWinner('none') });
+    };
+  }, [menu.winner, onSelectWinner]);
 
   const updatedGames = useCallback(() => {
     return draft.games
-  }, [fetchData, onSelectChampion, onSelectSlot, onSelectGame, onSelectWinner])
+  }, [fetchData, onSelectChampion, onSelectSlot, onSelectGame, onSelectWinner]);
 
 
   return (
     <main className="flex flex-col items-center gap-8">
-      <nav>
-
-      </nav>
+      <NavBar />
       <header className="flex self-center items-center gap-8  max-w-[100vw]">
         <Switch />
         <SearchBox value={menu.search} onChangeValue={onSearch} />
@@ -131,7 +130,7 @@ export default function Home() {
         <ChampionList champions={updatedChampions()} onSelectChampion={onSelectChampion} />
         <SidePicks side={updatedSide(menu.game).redSide} title='RED SIDE' isWinner={draft.winner} />
       </section>
-      <footer className="flex items-center justify-between mt-4 w-screen max-w-5xl">
+      <footer className="flex items-center justify-between mt-2 w-screen max-w-5xl">
         <SideBans side={updatedSide(menu.game).blueSide} />
         <SideBans side={updatedSide(menu.game).redSide} />
       </footer>

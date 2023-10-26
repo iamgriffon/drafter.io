@@ -1,19 +1,21 @@
+import { Prisma, type Draft as PrismaDraft } from "@prisma/client";
 import {
+  GameSeries,
   type Champion,
   type DraftPosition,
   type MatchWinner,
   type Series,
 } from "../types";
-import {
-  type SELECT_CHAMPION,
-  type SELECT_POSITION,
-  type SEARCH_CHAMPION,
-  type SELECT_GAME,
-  type UPDATE_CHAMPIONS,
-  type UPDATE_SCRIM,
-  type UPDATE_SERIES,
-  type UPDATE_WINNER,
-} from "./actions";
+
+export const UPDATE_SERIES = "UPDATE_SERIES";
+export const SELECT_GAME = "SELECT_GAME";
+export const UPDATE_CHAMPIONS = "UPDATE_CHAMPIONS";
+export const UPDATE_WINNER = "UPDATE_WINNER";
+export const SEARCH_CHAMPION = "SEARCH_CHAMPION";
+export const UPDATE_SCRIM = "UPDATE_SCRIM";
+export const SELECT_CHAMPION = "SELECT_CHAMPION";
+export const SELECT_POSITION = "SELECT_POSITION";
+export const STORE_DRAFTS = "STORE_DRAFTS";
 
 export interface MenuProps {
   champions: Champion[];
@@ -26,6 +28,7 @@ export interface MenuProps {
     champion: Champion;
     position: DraftPosition | null;
   };
+  drafts: PrismaDraft[];
 }
 
 export interface UpdateSeriesAction {
@@ -68,6 +71,11 @@ export interface SelectPositionAction {
   payload: DraftPosition | null;
 }
 
+export interface StoreDraftsAction {
+  type: typeof STORE_DRAFTS;
+  payload: PrismaDraft[]
+}
+
 export type MenuActions =
   | UpdateSeriesAction
   | SelectGameAction
@@ -76,13 +84,6 @@ export type MenuActions =
   | SearchChampionAction
   | UpdateWinnerAction
   | SelectPositionAction
-  | SelectChampionAction;
-
-/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
-export type MenuPayloadTypes =
-  | Series
-  | number
-  | string
-  | boolean
-  | MatchWinner
-  | Champion[];
+  | SelectChampionAction
+  | StoreDraftsAction
+  ;

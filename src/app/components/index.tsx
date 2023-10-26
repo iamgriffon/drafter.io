@@ -7,3 +7,4 @@ export { SidePicks } from './picks';
 export { SearchBox } from './search';
 export { Switch } from './switch';
 export { WinnerPicker } from './winnerpicker'
+export { NavBar } from './navbar'

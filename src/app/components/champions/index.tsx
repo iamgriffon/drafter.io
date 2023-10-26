@@ -26,7 +26,7 @@ export function ChampionList({
 
   return (
     <div
-      className="overflow-x-hidden h-[40rem] w-screen max-w-5xl border-4 rounded-md border-gray-400 cursor-pointer 
+      className="overflow-x-hidden h-[38rem] w-screen max-w-5xl border-4 rounded-md border-gray-400 cursor-pointer 
     scroll scrollbar scrollbar-track-transparent scrollbar-thumb-gray-200 scrollbar-thumb-rounded-md">
       <div className="grid grid-cols-10 m-3 p-3 gap-3 items-center">
         {champions.length > 0 ? (
