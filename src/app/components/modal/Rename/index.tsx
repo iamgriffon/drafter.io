@@ -1,5 +1,5 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FaCheck, FaSpinner } from "react-icons/fa";
 import { type RenameModalProps } from "..";
 import { useUser } from "@clerk/nextjs";
@@ -35,13 +35,17 @@ export function RenameModal({
   const [success, setSuccess] = useState(false);
   const [step, setStep] = useState(1);
 
+  const updateStep = useCallback((step: number) => {
+    setStep(step)
+  },[]);
+
   useEffect(() => {
     setLoading(false);
     setSuccess(false);
-    setStep(0);
+    updateStep(0);
     setErrorMessage("");
     setSuccessMessage("");
-  }, [setErrorMessage, setStep]);
+  }, [setErrorMessage, updateStep, setSuccessMessage]);
 
   let user_id: string = '';
   let draft = state.menu.drafts.find(draft => draft.id === id)?.data! as GameSeries;

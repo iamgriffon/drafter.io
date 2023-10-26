@@ -23,7 +23,7 @@ export function ConfirmModal({
     setStep(0);
     setErrorMessage("");
     setSuccessMessage("");
-  },[]);
+  },[setErrorMessage, setStep, setSuccessMessage]);
 
   const {  mutate, data } = api.draft.checkOwner.useMutation();
   const user = useUser();

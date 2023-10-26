@@ -6,7 +6,7 @@ import { type ExportModalProps } from "..";
 import { v4 as uuid } from "uuid";
 import { useUser } from "@clerk/nextjs";
 import { validateGameSeries } from "@/utils/checkForDraft";
-import { GameSeries } from "@/store/types";
+import { type GameSeries } from "@/store/types";
 import { TbError404 } from "react-icons/tb";
 import { api } from "@/trpc/react";
 import { useAppContext } from "@/store/context";

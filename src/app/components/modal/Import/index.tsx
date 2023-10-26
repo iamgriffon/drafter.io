@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { type ChangeEvent, useEffect, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { BiLinkAlt } from "react-icons/bi";
 import { type ImportModalProps } from "..";
@@ -29,7 +29,7 @@ export function ImportModal({
   useEffect(() => {
     setStep(0);
     setErrorMessage("");
-  },[]);
+  },[setErrorMessage, setStep]);
 
   const [draftLink, setDraftLink] = useState(link);
   const [loading, setLoading] = useState(false);
@@ -56,7 +56,7 @@ export function ImportModal({
     setSuccess(false);
     setStep(0);
     setErrorMessage("");
-  }, []);
+  }, [setErrorMessage, setStep]);
 
   async function onImportDraft() {
     setErrorMessage("");

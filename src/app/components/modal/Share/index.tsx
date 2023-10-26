@@ -22,7 +22,7 @@ export function ShareModal({
   useEffect(() => {
     setStep(0);
     setSuccessMessage("");
-  }, []);
+  }, [setStep, setSuccessMessage]);
 
 
   const buttonStepMap: ButtonStepMap = {

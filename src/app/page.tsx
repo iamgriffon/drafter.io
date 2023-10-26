@@ -111,8 +111,7 @@ export default function Home() {
 
   const updatedGames = useCallback(() => {
     return draft.games
-  }, [fetchData, onSelectChampion, onSelectSlot, onSelectGame, onSelectWinner, draft.games]);
-
+  }, [draft.games]);
 
   return (
     <main className="flex flex-col items-center gap-8">

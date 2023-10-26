@@ -58,7 +58,6 @@ export function NavBar() {
           onSettled: () => callback(),
         }
       );
-      fetchDrafts();
     },
     [deleteDraft, id, userProps]
   );
@@ -75,7 +74,6 @@ export function NavBar() {
           onSettled: () => callback(),
         }
       );
-      fetchDrafts();
     },
     [state.draft, updateDraft, name, link]
   );
