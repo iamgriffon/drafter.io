@@ -19,6 +19,14 @@ export type GameSeries = {
 	id?: string;
 };
 
+export type DraftResponse = {
+  id: string;
+  name: string;
+  link: string;
+  data: GameSeries;
+  userId: string;
+}[]
+
 export type Game = {
 	game: number;
 	winner: MatchWinner;

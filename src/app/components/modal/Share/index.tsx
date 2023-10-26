@@ -71,6 +71,7 @@ export function ShareModal({
               className="p-2 font-mono text-sm font-normal w-full outline-none bg-transparent"
               type="text"
               value={link}
+              readOnly
             />
           </div>
           <button className="w-32 h-12 rounded-lg flex justify-center bg-green-500 opacity-100 font-bold text-white hover:bg-green-600 transition-colors">

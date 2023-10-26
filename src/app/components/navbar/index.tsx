@@ -37,7 +37,7 @@ export function NavBar() {
   const { state, dispatch } = useAppContext();
   const { games } = state.draft;
   const { game, drafts } = state.menu;
-  const { data } = api.draft.fetch.useQuery(
+  const { refetch } = api.draft.fetch.useQuery(
     {
       user_id: userProps?.id || "",
     },
@@ -46,26 +46,6 @@ export function NavBar() {
       refetchOnMount: true,
     }
   );
-
-  const fetchDrafts = useCallback(async () => {
-    if (user) {
-      const response = data;
-      if (response) console.log({ response })
-      // dispatch({ type: 'menu', action: storeDrafts(response) });
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (user) {
-      const response = data;
-      if (response) {
-        console.log({ response })
-        dispatch({ type: 'menu', action: storeDrafts(response) });
-      }
-    }
-  }, [data]);
-
-  console.log({ storedDrafts: drafts })
 
   const onDeleteDraft = useCallback(
     (callback: () => void) => {
@@ -78,6 +58,7 @@ export function NavBar() {
           onSettled: () => callback(),
         }
       );
+      fetchDrafts();
     },
     [deleteDraft, id, userProps]
   );
@@ -94,9 +75,15 @@ export function NavBar() {
           onSettled: () => callback(),
         }
       );
+      fetchDrafts();
     },
     [state.draft, updateDraft, name, link]
   );
+
+  const fetchDrafts = async () => {
+      const response = await refetch();
+      if (response.data) dispatch({ type: 'menu', action: storeDrafts(response.data) });
+  }
 
   const onCreateNew = useCallback(
     (callback: () => void) => {
@@ -115,9 +102,19 @@ export function NavBar() {
     return games[game - 1]!;
   }
 
-  function importDraft(param: GameSeries) {
-    dispatch({ type: 'draft', action: updateFullDraft(param) })
-  }
+  const importDraft = (param: GameSeries) => {
+    dispatch({ type: 'draft', action: updateFullDraft(param) });
+  };
+
+  const updated = () => {
+    return {
+      drafts: state.menu.drafts
+    }
+  };
+
+  useEffect(() => {
+    fetchDrafts()
+  },[open])
 
   return (
     <>
@@ -162,13 +159,15 @@ export function NavBar() {
               )}
             </section>
             <section className="flex flex-row gap-4">
-              <DropdownMenu.Trigger onClick={async () => await fetchDrafts()}>
-                <p className="font-bold">My Drafts</p>
-              </DropdownMenu.Trigger>
+              {!!user.isSignedIn && (
+                <DropdownMenu.Trigger>
+                  <p className="font-bold">My Drafts</p>
+                </DropdownMenu.Trigger>
+              )}
               <DropdownMenu.Portal>
                 <DropdownMenu.Content sideOffset={5} className="z-10 flex flex-col gap-1 w-[10rem] mt-2 p-2 bg-white rounded-md shadow-md cursor-pointer">
-                  {drafts.length > 0
-                    ? drafts?.map((draft, index) => (
+                  {updated().drafts.length > 0
+                    ? updated().drafts?.map((draft, index) => (
                       <React.Fragment key={index}>
                         <div className="flex flex-col text-gray-600 hover:text-gray-400">
                           <DropdownMenu.Sub>
@@ -232,6 +231,7 @@ export function NavBar() {
                                     openModal("Rename", () => {
                                       setName(draft.name);
                                       setLink(draft.link);
+                                      setId(draft.id);
                                     });
                                   }}>
                                   Rename
@@ -286,9 +286,11 @@ export function NavBar() {
             link={link}
             setLink={setLink}
             name={name}
+            setName={setName}
             onDeleteDraft={onDeleteDraft}
             onUpdateDraft={onUpdateDraft}
             onCreateNew={onCreateNew}
+            id={id}
           />
         </DropdownMenu.Root>
       </Dialog.Root>

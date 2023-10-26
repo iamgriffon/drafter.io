@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import { FaCheck, FaSpinner } from "react-icons/fa";
 import { RenameModalProps } from "..";
 import { useUser } from "@clerk/nextjs";
-import { validateGameSeries } from "@/utils/checkForDraft";
 import { GameSeries } from "@/store/types";
 import { TbError404 } from "react-icons/tb";
 import { api } from "@/trpc/react";
 import { useAppContext } from "@/store/context";
+import { validateGameSeries } from "@/utils/checkForDraft";
 
 interface ButtonStepMap {
-	[key: number]: JSX.Element;
+  [key: number]: JSX.Element;
 }
 
 export function RenameModal({
@@ -20,14 +20,17 @@ export function RenameModal({
   setErrorMessage,
   successMessage,
   setSuccessMessage,
-  link
+  link,
+  name,
+  setName,
+  id
 }: RenameModalProps) {
   const { mutateAsync, isLoading, isSuccess } =
-		api.draft.update.useMutation();
-  const [name, setName] = useState("");
-  const { state } = useAppContext();
+    api.draft.update.useMutation();
+  const { state, dispatch } = useAppContext();
   const { user } = useUser();
-  const isDraftValid = validateGameSeries(state.draft);
+  const currentDraft = state.menu.drafts.find(draft => draft.id === id)?.data!
+  const isDraftValid = validateGameSeries(currentDraft);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [step, setStep] = useState(1);
@@ -40,15 +43,14 @@ export function RenameModal({
     setSuccessMessage("");
   }, []);
 
-  let user_id: string;
-  let draft: GameSeries;
+  let user_id: string = '';
+  let draft: GameSeries = state.menu.drafts.find(draft => draft.id === id)?.data!;
 
-  async function onRenameDraft() {
+  const onRenameDraft = async () => {
     if (!getErrorMessage()) return;
     setErrorMessage("");
     setSuccessMessage("");
     if (user) user_id = user.id;
-    if (isDraftValid) draft = state.draft;
     setStep(1);
     await mutateAsync({
       draft: draft,
@@ -62,7 +64,7 @@ export function RenameModal({
       if (res && res?.success === true) {
         setSuccessMessage("Successfuly Renamed!");
         setStep(2);
-      } else if (!res.success){
+      } else if (!res.success) {
         setErrorMessage(res.message);
         setStep(0);
       }
@@ -92,7 +94,7 @@ export function RenameModal({
         onClick={() => onRenameDraft()}
         className="self-center"
       >
-				GO!
+        GO!
       </p>
     ),
     1: <FaSpinner className="animate-spin self-center w-6 h-6" />,
@@ -114,7 +116,7 @@ export function RenameModal({
           className="font-bold text-white text-lg"
           onClick={() => closeModal()}
         >
-					X
+          X
         </Dialog.Close>
       </div>
 

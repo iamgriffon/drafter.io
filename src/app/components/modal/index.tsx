@@ -9,72 +9,77 @@ import { RenameModal } from "./Rename";
 import { ShareModal } from "./Share";
 
 export interface ModalPageProps {
-	open: boolean;
-	name: string;
-	closeModal: () => void;
-	label: OperationsMapEnum;
-	importDraft: (param: GameSeries) => void;
-	link: string;
-	setLink: Dispatch<SetStateAction<string>>;
+  open: boolean;
+  name: string;
+  setName: Dispatch<SetStateAction<string>>;
+  closeModal: () => void;
+  label: OperationsMapEnum;
+  importDraft: (param: GameSeries) => void;
+  link: string;
+  setLink: Dispatch<SetStateAction<string>>;
   onUpdateDraft: (param: () => void) => void;
   onDeleteDraft: (param: () => void) => void;
   onCreateNew: (param: () => void) => void;
+  id: string;
 }
 
 export interface ImportModalProps {
-	closeModal: () => void;
-	label: OperationsMapEnum;
-	onSubmit: (param: GameSeries) => void;
-	link: string;
+  closeModal: () => void;
+  label: OperationsMapEnum;
+  onSubmit: (param: GameSeries) => void;
+  link: string;
   setLink: Dispatch<SetStateAction<string>>;
   step: number;
-  setStep: Dispatch<SetStateAction<number>>; 
+  setStep: Dispatch<SetStateAction<number>>;
   errorMessage: string;
   setErrorMessage: Dispatch<SetStateAction<string>>;
 }
 
 export interface ExportModalProps {
-	closeModal: () => void;
-	label: OperationsMapEnum;
+  closeModal: () => void;
+  label: OperationsMapEnum;
   setLink: Dispatch<SetStateAction<string>>;
   errorMessage: string;
-  setErrorMessage: Dispatch<SetStateAction<string>> ;
+  setErrorMessage: Dispatch<SetStateAction<string>>;
   successMessage: string;
-  setSuccessMessage: Dispatch<SetStateAction<string>> 
+  setSuccessMessage: Dispatch<SetStateAction<string>>
 }
 
 export interface ShareModalProps {
-	closeModal: () => void;
-	label: OperationsMapEnum;
-	link: string;
+  closeModal: () => void;
+  label: OperationsMapEnum;
+  link: string;
   step: number;
   setStep: Dispatch<SetStateAction<number>>;
   successMessage: string;
-  setSuccessMessage: Dispatch<SetStateAction<string>> 
+  setSuccessMessage: Dispatch<SetStateAction<string>>
 }
 
 export interface ConfirmModalProps {
-	closeModal: () => void;
-	label: OperationsMapEnum;
+  closeModal: () => void;
+  label: OperationsMapEnum;
   link: string,
-	name: string;
-	onAccept: (param: () => void) => void;
+  name: string;
+  onAccept: (param: () => void) => void;
   step: number;
   setStep: Dispatch<SetStateAction<number>>;
   errorMessage: string;
-  setErrorMessage: Dispatch<SetStateAction<string>> ;
+  setErrorMessage: Dispatch<SetStateAction<string>>;
   successMessage: string;
-  setSuccessMessage: Dispatch<SetStateAction<string>> 
+  setSuccessMessage: Dispatch<SetStateAction<string>>
 }
 
 export interface RenameModalProps {
-	closeModal: () => void;
-	label: OperationsMapEnum;
+  closeModal: () => void;
+  label: OperationsMapEnum;
   errorMessage: string;
-  setErrorMessage: Dispatch<SetStateAction<string>> ;
+  setErrorMessage: Dispatch<SetStateAction<string>>;
   successMessage: string;
-  setSuccessMessage: Dispatch<SetStateAction<string>> ;
+  setSuccessMessage: Dispatch<SetStateAction<string>>;
   link: string;
+  name: string;
+  setName: Dispatch<SetStateAction<string>>
+  id: string;
 }
 
 
@@ -85,6 +90,8 @@ export function Modal({
   link = "",
   setLink,
   name,
+  id,
+  setName,
   onDeleteDraft,
   onUpdateDraft,
   onCreateNew
@@ -184,6 +191,9 @@ export function Modal({
         successMessage={successMessage}
         setSuccessMessage={setSuccessMessage}
         link={link}
+        name={name}
+        setName={setName}
+        id={id}
       />
     )
   };

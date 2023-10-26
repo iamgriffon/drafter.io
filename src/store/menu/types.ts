@@ -1,6 +1,6 @@
-import { Prisma, type Draft as PrismaDraft } from "@prisma/client";
+import { type Draft as PrismaDraft } from "@prisma/client";
 import {
-  GameSeries,
+  DraftResponse,
   type Champion,
   type DraftPosition,
   type MatchWinner,
@@ -28,7 +28,11 @@ export interface MenuProps {
     champion: Champion;
     position: DraftPosition | null;
   };
-  drafts: PrismaDraft[];
+  drafts: DraftResponse
+}
+
+type x = {
+  a:  PrismaDraft[];
 }
 
 export interface UpdateSeriesAction {
