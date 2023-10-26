@@ -1,7 +1,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { useEffect, useState } from "react";
 import { FaCheck, FaSpinner } from "react-icons/fa";
-import { RenameModalProps } from "..";
+import { type RenameModalProps } from "..";
 import { useUser } from "@clerk/nextjs";
 import { GameSeries } from "@/store/types";
 import { TbError404 } from "react-icons/tb";
@@ -41,7 +41,7 @@ export function RenameModal({
     setStep(0);
     setErrorMessage("");
     setSuccessMessage("");
-  }, []);
+  }, [setErrorMessage, setStep]);
 
   let user_id: string = '';
   let draft = state.menu.drafts.find(draft => draft.id === id)?.data! as GameSeries;

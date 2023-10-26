@@ -1,10 +1,7 @@
-'use client'
-
 import { useAppContext } from "@/store/context";
 import { selectPosition } from "@/store/menu/actions";
 import { type MatchWinner, type BlueSide, type RedSide, type DraftPosition } from "@/store/types";
 import Image from "next/image";
-import { FaCrown } from "react-icons/fa";
 
 interface SidePicksProps {
 	side: BlueSide | RedSide;

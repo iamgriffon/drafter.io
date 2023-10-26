@@ -1,6 +1,6 @@
 import { type Draft as PrismaDraft } from "@prisma/client";
 import {
-  DraftResponse,
+  type DraftResponse,
   type Champion,
   type DraftPosition,
   type MatchWinner,

@@ -11,13 +11,13 @@ import {
   UPDATE_GAME_WINNER,
   UPDATE_SERIES,
   UPDATE_ID,
+  UPDATE_DRAFT,
   type PurgeGamesWinnersAction,
   type UpdateSeriesAction,
   type UpdateGameAction,
   type UpdateGameWinnerAction,
-  UpdateDraftIDAction,
-  UpdateDraftAction,
-  UPDATE_DRAFT,
+  type UpdateDraftIDAction,
+  type UpdateDraftAction,
 } from "./types";
 
 export const updateDraftPicks = (

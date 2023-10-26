@@ -19,41 +19,41 @@ export default function Home() {
     enabled: false
   });
 
-  function onSearch(input: string) {
-    dispatch({ type: 'menu', action: searchChampion(input) })
-  };
-
-  function onSelectSlot(position: DraftPosition) {
-    dispatch({ type: 'menu', action: selectPosition(position) })
-  };
-
-  function onSelectChampion(champion: Champion) {
-    dispatch({ type: 'menu', action: selectChampion(champion) })
-  };
-
-  function onSelectGame(game: number) {
+  const onSearch = useCallback((input: string) => {
+    dispatch({ type: 'menu', action: searchChampion(input) });
+  }, [dispatch]);
+  
+  const onSelectSlot = useCallback((position: DraftPosition) => {
+    dispatch({ type: 'menu', action: selectPosition(position) });
+  }, [dispatch]);
+  
+  const onSelectChampion = useCallback((champion: Champion) => {
+    dispatch({ type: 'menu', action: selectChampion(champion) });
+  }, [dispatch]);
+  
+  const onSelectGame = useCallback((game: number) => {
     dispatch({ type: 'menu', action: selectGame(game) });
     dispatch({ type: 'menu', action: selectChampion(DEFAULT_CHAMPION_STATE) });
-  };
-
-  function onSelectSeries(param: Series) {
+  }, [dispatch]);
+  
+  const onSelectSeries = useCallback((param: Series) => {
     dispatch({ type: 'draft', action: updateDraftSeries(state.draft, param) });
     dispatch({ type: 'menu', action: updateMenuSeries(param) });
-    dispatch({ type: 'menu', action: selectGame(1) })
-  };
-
-  function onSelectWinner(param: MatchWinner) {
+    dispatch({ type: 'menu', action: selectGame(1) });
+  }, [dispatch, state]);
+  
+  const onSelectWinner = useCallback((param: MatchWinner) => {
     dispatch({ type: 'draft', action: updateDraftGameWinner(state.draft, currentGame, param) });
-  };
+  }, [dispatch, state, currentGame]);
 
-  function onDraftChampion() {
+  const onDraftChampion = useCallback(() => {
     if (champion.id.length > 0 && position != null) {
       dispatch({ type: 'draft', action: updateDraftPicks(state.draft, menu.game, position, champion) });
       dispatch({ type: 'menu', action: selectGame(currentGame) });
       dispatch({ type: 'menu', action: selectChampion(DEFAULT_CHAMPION_STATE) });
       dispatch({ type: 'menu', action: selectPosition(null) });
     }
-  };
+  }, [dispatch, state, menu.game, position, champion, currentGame]);
 
   const updatedSide = (game: number) => {
     return draft.games[game - 1]!
@@ -107,11 +107,11 @@ export default function Home() {
       dispatch({ type: 'draft', action: updateDraftGameWinner(state.draft, currentGame, menu.winner) });
       dispatch({ type: 'menu', action: updateMenuGameWinner('none') });
     };
-  }, [menu.winner, onSelectWinner]);
+  }, [menu.winner, onSelectWinner, currentGame, dispatch, state.draft]);
 
   const updatedGames = useCallback(() => {
     return draft.games
-  }, [fetchData, onSelectChampion, onSelectSlot, onSelectGame, onSelectWinner]);
+  }, [fetchData, onSelectChampion, onSelectSlot, onSelectGame, onSelectWinner, draft.games]);
 
 
   return (

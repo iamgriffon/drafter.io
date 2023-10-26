@@ -1,7 +1,7 @@
 import { useAppContext } from "@/store/context";
 import { updateFullDraft } from "@/store/draft/actions";
 import { storeDrafts } from "@/store/menu/actions";
-import { GameSeries } from "@/store/types";
+import { type GameSeries } from "@/store/types";
 import { api } from "@/trpc/react";
 import { DEFAULT_BO1_STATE } from "@/utils/setDefaultValues";
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
@@ -114,7 +114,7 @@ export function NavBar() {
 
   useEffect(() => {
     fetchDrafts()
-  },[open])
+  },[open, user.user?.id])
 
   return (
     <>

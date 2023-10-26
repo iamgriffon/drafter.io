@@ -2,7 +2,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { useEffect, useState } from "react";
 import { BiLinkAlt } from "react-icons/bi";
 import { FaCheck, FaSpinner } from "react-icons/fa";
-import { ExportModalProps } from "..";
+import { type ExportModalProps } from "..";
 import { v4 as uuid } from "uuid";
 import { useUser } from "@clerk/nextjs";
 import { validateGameSeries } from "@/utils/checkForDraft";
@@ -43,7 +43,7 @@ export function ExportModal({
     setStep(0);
     setErrorMessage("");
     setSuccessMessage("");
-  }, []);
+  }, [setErrorMessage, setStep]);
 
   let user_id: string;
   let draft: GameSeries;

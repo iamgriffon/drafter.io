@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { BiLinkAlt } from "react-icons/bi";
-import { ImportModalProps } from "..";
+import { type ImportModalProps } from "..";
 import { FaSpinner, FaCheck } from "react-icons/fa";
 import { TbError404 } from "react-icons/tb";
 import { api } from "@/trpc/react";

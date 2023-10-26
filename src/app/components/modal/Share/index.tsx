@@ -1,12 +1,12 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { BiLinkAlt } from "react-icons/bi";
-import { ShareModalProps } from "..";
-import { FaCheck, FaCopy } from "react-icons/fa";
+import { type ShareModalProps } from "..";
+import { FaCheck } from "react-icons/fa";
 import { useEffect } from "react";
 import { RiFileCopy2Fill } from "react-icons/ri";
 
 interface ButtonStepMap {
-	[key: number]: JSX.Element;
+  [key: number]: JSX.Element;
 }
 
 export function ShareModal({
@@ -22,7 +22,7 @@ export function ShareModal({
   useEffect(() => {
     setStep(0);
     setSuccessMessage("");
-  },[]);
+  }, []);
 
 
   const buttonStepMap: ButtonStepMap = {
@@ -54,12 +54,12 @@ export function ShareModal({
           className="font-bold text-white text-lg"
           onClick={() => closeModal()}
         >
-					X
+          X
         </Dialog.Close>
       </div>
       <div>
         <p className="text-white">
-					Click the button to copy the link to clipboard
+          Click the button to copy the link to clipboard
         </p>
         <div className="flex w-full items-center justify-between gap-2">
           <div className="p-4 h-12 rounded-md w-full flex items-center bg-white">

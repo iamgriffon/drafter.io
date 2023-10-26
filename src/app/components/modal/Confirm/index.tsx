@@ -1,6 +1,6 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { ImCross } from "react-icons/im";
-import { ConfirmModalProps } from "..";
+import { type ConfirmModalProps } from "..";
 import { FaCheck, FaSpinner } from "react-icons/fa";
 import { useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
