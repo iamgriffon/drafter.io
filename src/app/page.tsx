@@ -76,7 +76,7 @@ export default function Home() {
     }
   };
 
-  async function fetchData() {
+  const fetchData = useCallback(async () => {
     try {
       const callback = await championData.refetch();
       if (callback.data) {
@@ -84,14 +84,14 @@ export default function Home() {
           return {
             ...champ,
             draftable: true
-          }
+          };
         });
-        dispatch({ type: 'menu', action: updateChampions(newData as Champion[]) })
+        dispatch({ type: 'menu', action: updateChampions(newData as Champion[]) });
       }
     } catch (err) {
       console.error(err);
     }
-  };
+  }, [dispatch, championData]);
 
   useEffect(() => {
     fetchData();

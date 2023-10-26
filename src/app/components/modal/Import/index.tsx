@@ -7,7 +7,7 @@ import { TbError404 } from "react-icons/tb";
 import { api } from "@/trpc/react";
 import { useAppContext } from "@/store/context";
 import { updateDraftID } from "@/store/draft/actions";
-import { GameSeries, Series } from "@/store/types";
+import { type GameSeries, type Series } from "@/store/types";
 import { selectGame, updateMenuSeries } from "@/store/menu/actions";
 
 interface ButtonStepMap {

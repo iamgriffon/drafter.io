@@ -43,7 +43,7 @@ export function ExportModal({
     setStep(0);
     setErrorMessage("");
     setSuccessMessage("");
-  }, [setErrorMessage, setStep]);
+  }, [setErrorMessage, setStep, setSuccessMessage]);
 
   let user_id: string;
   let draft: GameSeries;

@@ -78,10 +78,10 @@ export function NavBar() {
     [state.draft, updateDraft, name, link]
   );
 
-  const fetchDrafts = async () => {
-      const response = await refetch();
-      if (response.data) dispatch({ type: 'menu', action: storeDrafts(response.data) });
-  }
+  const fetchDrafts = useCallback(async () => {
+    const response = await refetch();
+    if (response.data) dispatch({ type: 'menu', action: storeDrafts(response.data) });
+  }, [dispatch, refetch]);
 
   const onCreateNew = useCallback(
     (callback: () => void) => {
