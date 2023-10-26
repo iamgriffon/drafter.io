@@ -1,3 +1,5 @@
+import { JsonValue } from "@prisma/client/runtime/library";
+
 export type MatchWinner = "red" | "blue" | "none";
 
 export type Draft = {
@@ -23,7 +25,7 @@ export type DraftResponse = {
   id: string;
   name: string;
   link: string;
-  data: GameSeries;
+  data: GameSeries | JsonValue;
   userId: string;
 }[]
 

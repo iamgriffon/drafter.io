@@ -30,7 +30,7 @@ export function RenameModal({
   const { state, dispatch } = useAppContext();
   const { user } = useUser();
   const currentDraft = state.menu.drafts.find(draft => draft.id === id)?.data!
-  const isDraftValid = validateGameSeries(currentDraft);
+  const isDraftValid = validateGameSeries(currentDraft as GameSeries);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [step, setStep] = useState(1);
@@ -44,7 +44,7 @@ export function RenameModal({
   }, []);
 
   let user_id: string = '';
-  let draft: GameSeries = state.menu.drafts.find(draft => draft.id === id)?.data!;
+  let draft = state.menu.drafts.find(draft => draft.id === id)?.data! as GameSeries;
 
   const onRenameDraft = async () => {
     if (!getErrorMessage()) return;
