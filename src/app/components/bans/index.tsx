@@ -32,6 +32,7 @@ export function SideBans({ side }: RedSideBansProps) {
                 width={90}
                 height={90}
                 alt={ban.champion.name}
+                priority
               />
             ) : (
               <Image
