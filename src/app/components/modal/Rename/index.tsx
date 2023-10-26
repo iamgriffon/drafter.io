@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { FaCheck, FaSpinner } from "react-icons/fa";
 import { type RenameModalProps } from "..";
 import { useUser } from "@clerk/nextjs";
-import { GameSeries } from "@/store/types";
+import { type GameSeries } from "@/store/types";
 import { TbError404 } from "react-icons/tb";
 import { api } from "@/trpc/react";
 import { useAppContext } from "@/store/context";

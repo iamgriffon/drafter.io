@@ -1,7 +1,7 @@
-import { GameSeries } from "@/store/types";
+import { type GameSeries } from "@/store/types";
 import * as Dialog from "@radix-ui/react-dialog";
-import { Dispatch, SetStateAction, useState } from "react";
-import { OperationsMapEnum } from "../navbar";
+import { useState, useCallback } from "react";
+import { type OperationsMapEnum } from "../navbar";
 import { ConfirmModal } from "./Confirm";
 import { ExportModal } from "./Export";
 import { ImportModal } from "./Import";
@@ -11,12 +11,12 @@ import { ShareModal } from "./Share";
 export interface ModalPageProps {
   open: boolean;
   name: string;
-  setName: Dispatch<SetStateAction<string>>;
+  setName: (param: string) => void;
   closeModal: () => void;
   label: OperationsMapEnum;
   importDraft: (param: GameSeries) => void;
   link: string;
-  setLink: Dispatch<SetStateAction<string>>;
+  setLink: (param: string) => void;
   onUpdateDraft: (param: () => void) => void;
   onDeleteDraft: (param: () => void) => void;
   onCreateNew: (param: () => void) => void;
@@ -28,21 +28,21 @@ export interface ImportModalProps {
   label: OperationsMapEnum;
   onSubmit: (param: GameSeries) => void;
   link: string;
-  setLink: Dispatch<SetStateAction<string>>;
+  setLink: (param: string) => void;
   step: number;
-  setStep: Dispatch<SetStateAction<number>>;
+  setStep: (param: number) => void;
   errorMessage: string;
-  setErrorMessage: Dispatch<SetStateAction<string>>;
+  setErrorMessage: (param: string) => void;
 }
 
 export interface ExportModalProps {
   closeModal: () => void;
   label: OperationsMapEnum;
-  setLink: Dispatch<SetStateAction<string>>;
+  setLink: (param: string) => void;
   errorMessage: string;
-  setErrorMessage: Dispatch<SetStateAction<string>>;
+  setErrorMessage: (param: string) => void;
   successMessage: string;
-  setSuccessMessage: Dispatch<SetStateAction<string>>
+  setSuccessMessage: (param: string) => void
 }
 
 export interface ShareModalProps {
@@ -50,9 +50,9 @@ export interface ShareModalProps {
   label: OperationsMapEnum;
   link: string;
   step: number;
-  setStep: Dispatch<SetStateAction<number>>;
+  setStep: (param: number) => void;
   successMessage: string;
-  setSuccessMessage: Dispatch<SetStateAction<string>>
+  setSuccessMessage: (param: string) => void
 }
 
 export interface ConfirmModalProps {
@@ -62,23 +62,23 @@ export interface ConfirmModalProps {
   name: string;
   onAccept: (param: () => void) => void;
   step: number;
-  setStep: Dispatch<SetStateAction<number>>;
+  setStep: (param: number) => void;
   errorMessage: string;
-  setErrorMessage: Dispatch<SetStateAction<string>>;
+  setErrorMessage: (param: string) => void;
   successMessage: string;
-  setSuccessMessage: Dispatch<SetStateAction<string>>
+  setSuccessMessage: (param: string) => void
 }
 
 export interface RenameModalProps {
   closeModal: () => void;
   label: OperationsMapEnum;
   errorMessage: string;
-  setErrorMessage: Dispatch<SetStateAction<string>>;
+  setErrorMessage: (param: string) => void;
   successMessage: string;
-  setSuccessMessage: Dispatch<SetStateAction<string>>;
+  setSuccessMessage: (param: string) => void;
   link: string;
   name: string;
-  setName: Dispatch<SetStateAction<string>>
+  setName: (param: string) => void
   id: string;
 }
 
@@ -98,9 +98,22 @@ export function Modal({
 }: ModalPageProps) {
 
   const [step, setStep] = useState(0);
-  const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
+  const updateSuccessMessage = useCallback((message: string) => {
+    setSuccessMessage(message);
+  }, []);
+
+  const updateStep = useCallback((step: number) => {
+    setStep(step);
+  }, []);
+
+  const updateErrorMessage = useCallback((message: string) => {
+    setErrorMessage(message);
+  }, []);
+
+  
   const ModalMap = {
     Import: (
       <ImportModal
@@ -110,9 +123,9 @@ export function Modal({
         link={link}
         setLink={setLink}
         step={step}
-        setStep={setStep}
+        setStep={updateStep}
         errorMessage={errorMessage}
-        setErrorMessage={setErrorMessage}
+        setErrorMessage={updateErrorMessage}
       />
     ),
     Export: (
@@ -120,9 +133,9 @@ export function Modal({
         closeModal={closeModal}
         label={label}
         errorMessage={errorMessage}
-        setErrorMessage={setErrorMessage}
+        setErrorMessage={updateErrorMessage}
         successMessage={successMessage}
-        setSuccessMessage={setSuccessMessage}
+        setSuccessMessage={updateSuccessMessage}
         setLink={setLink}
       />
     ),
@@ -132,9 +145,9 @@ export function Modal({
         label={label}
         link={link}
         step={step}
-        setStep={setStep}
+        setStep={updateStep}
         successMessage={successMessage}
-        setSuccessMessage={setSuccessMessage}
+        setSuccessMessage={updateSuccessMessage}
       />
     ),
     Delete: (
@@ -145,11 +158,11 @@ export function Modal({
         label={label}
         onAccept={onDeleteDraft}
         step={step}
-        setStep={setStep}
+        setStep={updateStep}
         errorMessage={errorMessage}
-        setErrorMessage={setErrorMessage}
+        setErrorMessage={updateErrorMessage}
         successMessage={successMessage}
-        setSuccessMessage={setSuccessMessage}
+        setSuccessMessage={updateSuccessMessage}
       />
     ),
     Update: (
@@ -160,11 +173,11 @@ export function Modal({
         name={name}
         onAccept={onUpdateDraft}
         step={step}
-        setStep={setStep}
+        setStep={updateStep}
         errorMessage={errorMessage}
-        setErrorMessage={setErrorMessage}
+        setErrorMessage={updateErrorMessage}
         successMessage={successMessage}
-        setSuccessMessage={setSuccessMessage}
+        setSuccessMessage={updateSuccessMessage}
       />
     ),
     Create: (
@@ -175,11 +188,11 @@ export function Modal({
         name={name}
         onAccept={onCreateNew}
         step={step}
-        setStep={setStep}
+        setStep={updateStep}
         errorMessage={errorMessage}
-        setErrorMessage={setErrorMessage}
+        setErrorMessage={updateErrorMessage}
         successMessage={successMessage}
-        setSuccessMessage={setSuccessMessage}
+        setSuccessMessage={updateSuccessMessage}
       />
     ),
     Rename: (
@@ -187,9 +200,9 @@ export function Modal({
         closeModal={closeModal}
         label={label}
         errorMessage={errorMessage}
-        setErrorMessage={setErrorMessage}
+        setErrorMessage={updateErrorMessage}
         successMessage={successMessage}
-        setSuccessMessage={setSuccessMessage}
+        setSuccessMessage={updateSuccessMessage}
         link={link}
         name={name}
         setName={setName}

@@ -114,7 +114,15 @@ export function NavBar() {
 
   useEffect(() => {
     fetchDrafts()
-  },[open, user.user?.id])
+  },[open, user.user?.id]);
+
+  const updateLink = useCallback((link: string) => {
+    setLink(link);
+  }, []);
+
+  const updateName = useCallback((name: string) => {
+    setName(name);
+  }, []);
 
   return (
     <>
@@ -284,9 +292,9 @@ export function NavBar() {
             closeModal={() => setOpen(false)}
             importDraft={importDraft}
             link={link}
-            setLink={setLink}
+            setLink={updateLink}
             name={name}
-            setName={setName}
+            setName={updateName}
             onDeleteDraft={onDeleteDraft}
             onUpdateDraft={onUpdateDraft}
             onCreateNew={onCreateNew}

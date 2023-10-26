@@ -1,4 +1,4 @@
-import { GameSeries, type Draft, type Game, type MatchWinner, type Series } from "../types";
+import { type GameSeries, type Game, type MatchWinner, type Series } from "../types";
 
 export const UPDATE_SERIES = "UPDATE_SERIES";
 export const UPDATE_GAME = "UPDATE_GAME";
