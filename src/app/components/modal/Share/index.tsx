@@ -18,12 +18,10 @@ export function ShareModal({
   successMessage,
   setSuccessMessage,
 }: ShareModalProps) {
-
   useEffect(() => {
     setStep(0);
     setSuccessMessage("");
   }, [setStep, setSuccessMessage]);
-
 
   const buttonStepMap: ButtonStepMap = {
     0: (
@@ -33,25 +31,26 @@ export function ShareModal({
           setSuccessMessage("Link copied to the clipboard!");
           setStep(1);
         }}
-        className="w-6 h-6 self-center"
+        className="h-6 w-6 self-center"
       />
     ),
-    1: (
-      <FaCheck
-        onClick={() => closeModal()}
-        className="w-6 h-6 self-center"
-      />
-    ),
+    1: <FaCheck onClick={() => closeModal()} className="h-6 w-6 self-center" />,
   };
 
   return (
-    <div className="flex font-bold text-gray-800 mt-10 bg-slate-400 w-[45%] opacity-100 rounded-lg h-48 flex-col justify-between border-gray-700 p-8">
-      <div className="flex justify-between items-start">
-        <p className="text-white mb-4 drop-shadow-lg shadow-black text-lg">
+    <div
+      id="modal-wrapper"
+      className="mt-10 flex h-48 w-[45%] flex-col justify-between rounded-lg border-gray-700 bg-slate-400 p-8 font-bold text-gray-800 opacity-100"
+    >
+      <div className="flex items-start justify-between">
+        <p
+          id="modal-label"
+          className="mb-4 text-lg text-white shadow-black drop-shadow-lg"
+        >
           {label} Draft
         </p>
         <Dialog.Close
-          className="font-bold text-white text-lg"
+          className="text-lg font-bold text-white"
           onClick={() => closeModal()}
         >
           X
@@ -62,25 +61,27 @@ export function ShareModal({
           Click the button to copy the link to clipboard
         </p>
         <div className="flex w-full items-center justify-between gap-2">
-          <div className="p-4 h-12 rounded-md w-full flex items-center bg-white">
-            <BiLinkAlt
-              size={18}
-              className="mr-2"
-            />
+          <div className="flex h-12 w-full items-center rounded-md bg-white p-4">
+            <BiLinkAlt size={18} className="mr-2" />
             <input
-              className="p-2 font-mono text-sm font-normal w-full outline-none bg-transparent"
+              className="w-full bg-transparent p-2 font-mono text-sm font-normal outline-none"
               type="text"
               value={link}
               readOnly
             />
           </div>
-          <button className="w-32 h-12 rounded-lg flex justify-center bg-green-500 opacity-100 font-bold text-white hover:bg-green-600 transition-colors">
+          <button
+            id=""
+            className="flex h-12 w-32 justify-center rounded-lg bg-green-500 font-bold text-white opacity-100 transition-colors hover:bg-green-600"
+          >
             {buttonStepMap[step]}
           </button>
         </div>
       </div>
       {successMessage.trim().length > 0 ? (
-        <p className="mt-2 text-green-300">{successMessage}</p>
+        <p id="modal-success-msg" className="mt-2 text-green-300">
+          {successMessage}
+        </p>
       ) : null}
     </div>
   );

@@ -25,12 +25,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`font-sans ${inter.variable} bg-gray-800 w-full h-[100vh]`}>
+      <body
+        className={`font-sans ${inter.variable} h-[100vh] w-full bg-gray-800`}
+      >
         <TRPCReactProvider headers={headers()}>
           <ClerkProvider>
-            <AppProvider>
-              {children}
-            </AppProvider>
+            <AppProvider>{children}</AppProvider>
           </ClerkProvider>
         </TRPCReactProvider>
       </body>

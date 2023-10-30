@@ -28,12 +28,12 @@ export interface MenuProps {
     champion: Champion;
     position: DraftPosition | null;
   };
-  drafts: DraftResponse
+  drafts: DraftResponse;
 }
 
 type x = {
-  a:  PrismaDraft[];
-}
+  a: PrismaDraft[];
+};
 
 export interface UpdateSeriesAction {
   type: typeof UPDATE_SERIES;
@@ -77,7 +77,7 @@ export interface SelectPositionAction {
 
 export interface StoreDraftsAction {
   type: typeof STORE_DRAFTS;
-  payload: PrismaDraft[]
+  payload: PrismaDraft[];
 }
 
 export type MenuActions =
@@ -89,5 +89,4 @@ export type MenuActions =
   | UpdateWinnerAction
   | SelectPositionAction
   | SelectChampionAction
-  | StoreDraftsAction
-  ;
+  | StoreDraftsAction;

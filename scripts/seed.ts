@@ -1,15 +1,16 @@
-import { db } from '@/server/db'
+import { db } from "@/server/db";
 
 export async function fetchChampions() {
   let championArray = [];
 
-  const fetchVersions: any = await fetch('https://ddragon.leagueoflegends.com/api/versions.json')
-    .then(data => data.json());
-  
+  const fetchVersions: any = await fetch(
+    "https://ddragon.leagueoflegends.com/api/versions.json",
+  ).then((data) => data.json());
+
   const lastest = fetchVersions[0];
- 
+
   const parsedJSON: any = await fetch(
-    `http://ddragon.leagueoflegends.com/cdn/${lastest}/data/en_US/champion.json`
+    `http://ddragon.leagueoflegends.com/cdn/${lastest}/data/en_US/champion.json`,
   ).then((data) => data.json());
   for (const key in parsedJSON.data) {
     championArray.push(parsedJSON.data[key]);
@@ -28,9 +29,8 @@ export async function fetchChampions() {
     data: CHAMPIONS_TO_DATABASE,
   });
 
-  console.log('Deleted?', deleteChampions);
-  console.log('Created?', creation);
-
+  console.log("Deleted?", deleteChampions);
+  console.log("Created?", creation);
 }
 
 await fetchChampions();

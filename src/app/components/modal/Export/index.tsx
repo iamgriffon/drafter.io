@@ -12,7 +12,7 @@ import { api } from "@/trpc/react";
 import { useAppContext } from "@/store/context";
 
 interface ButtonStepMap {
-	[key: number]: JSX.Element;
+  [key: number]: JSX.Element;
 }
 
 export function ExportModal({
@@ -22,10 +22,9 @@ export function ExportModal({
   setErrorMessage,
   successMessage,
   setSuccessMessage,
-  setLink
+  setLink,
 }: ExportModalProps) {
-  const { mutateAsync, isLoading, isSuccess } =
-		api.draft.export.useMutation();
+  const { mutateAsync, isLoading, isSuccess } = api.draft.export.useMutation();
   const [draftLink, setDraftLink] = useState("");
   const [draftString, setDraftString] = useState("");
   const { state } = useAppContext();
@@ -56,22 +55,25 @@ export function ExportModal({
     if (user) user_id = user.id;
     if (isDraftValid) draft = GameDraft;
     setStep(1);
-    await mutateAsync({
-      draft,
-      link,
-      name: draftString,
-      user_id,
-    }, {
-      onError: (error) => {
-        console.log(error);
-      }
-    }).then((res) => {
+    await mutateAsync(
+      {
+        draft,
+        link,
+        name: draftString,
+        user_id,
+      },
+      {
+        onError: (error) => {
+          console.log(error);
+        },
+      },
+    ).then((res) => {
       if (res && res?.data?.link) {
         setSuccessMessage("Successfuly Created!");
         setDraftLink(res.data.link);
         setLink(res.data.link);
         setStep(2);
-      } else if (res.error){
+      } else if (res.error) {
         setErrorMessage(res.error);
         setStep(0);
       }
@@ -106,95 +108,108 @@ export function ExportModal({
     setSuccess(() => isSuccess);
   }, [isLoading, isSuccess]);
 
-
-
   const buttonStepMap: ButtonStepMap = {
     0: (
-      <p
-        onClick={() => onExportDraft()}
-        className="self-center"
-      >
-				GO!
+      <p onClick={() => onExportDraft()} className="self-center">
+        GO!
       </p>
     ),
-    1: <FaSpinner className="animate-spin self-center w-6 h-6" />,
-    2: (
-      <FaCheck
-        onClick={() => closeModal()}
-        className="w-6 h-6 self-center"
-      />
-    ),
+    1: <FaSpinner className="h-6 w-6 animate-spin self-center" />,
+    2: <FaCheck onClick={() => closeModal()} className="h-6 w-6 self-center" />,
   };
 
   return (
-    <div className="flex font-bold text-gray-800 mt-10 bg-slate-400 w-4/12 opacity-100 rounded-lg h-72 flex-col justify-between border-gray-700 p-8">
-      <div className="flex justify-between items-start">
-        <p className="text-white mb-4 drop-shadow-lg shadow-black text-lg">
+    <div
+      id="modal-wrapper"
+      className="mt-10 flex h-72 w-4/12 flex-col justify-between rounded-lg border-gray-700 bg-slate-400 p-8 font-bold text-gray-800 opacity-100"
+    >
+      <div className="flex items-start justify-between">
+        <p
+          id="modal-label"
+          className="mb-4 text-lg text-white shadow-black drop-shadow-lg"
+        >
           {label} Draft
         </p>
         <Dialog.Close
-          className="font-bold text-white text-lg"
+          className="text-lg font-bold text-white"
           onClick={() => closeModal()}
+          id="close-modal"
         >
-					X
+          X
         </Dialog.Close>
       </div>
 
       <div className="flex flex-col gap-2">
-        <p className="text-white">Give your Draft a name:</p>
+        <label htmlFor="modal-input" id="input-label" className="text-white">
+          Give your Draft a name:
+        </label>
         <section className="flex gap-2">
-          <div className="p-4 h-12 rounded-md w-full flex flex-row items-center bg-white">
+          <div className="flex h-12 w-full flex-row items-center rounded-md bg-white p-4">
             <input
-              className="p-2 font-mono font-normal w-[80%] outline-none bg-transparent"
+              className="w-[80%] bg-transparent p-2 font-mono font-normal outline-none"
               type="text"
               value={draftString}
               onChange={(e) => setDraftString(e.target.value)}
+              id="modal-input"
             />
           </div>
           <div>
             {!errorMessage.trim().length ? (
-              <button className="w-12 h-12 flex items-center justify-center rounded-lg bg-green-500 opacity-100 font-bold text-white hover:bg-green-600 transition-colors">
+              <button
+                id="input-submit-button-success"
+                className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-500 font-bold text-white opacity-100 transition-colors hover:bg-green-600"
+              >
                 {buttonStepMap[step]}
               </button>
             ) : (
               <button
-                className="w-32 h-12 rounded-lg flex justify-center bg-red-500 opacity-100 font-bold text-white hover:bg-red-600 transition-colors"
+                id="input-submit-button-error"
+                className="flex h-12 w-32 justify-center rounded-lg bg-red-500 font-bold text-white opacity-100 transition-colors hover:bg-red-600"
                 onClick={() => {
                   onExportDraft();
                 }}
               >
-                <TbError404 className="w-6 h-6 self-center" />
+                <TbError404 className="h-6 w-6 self-center" />
               </button>
             )}
           </div>
         </section>
 
-        <p className="text-white">Link</p>
+        <label
+          htmlFor="link-output"
+          id="link-output-label"
+          className="text-white"
+        >
+          Link
+        </label>
         <div className="flex w-full items-center justify-between gap-2">
           <div
-            className="p-4 h-12 rounded-md w-full flex items-center bg-white aria-disabled:bg-gray-400 aria-disabled:cursor-not-allowed aria-disabled:border-gray-500 aria-disabled:border-2
-             cursor-pointer"
+            className="flex h-12 w-full cursor-pointer items-center rounded-md bg-white p-4 aria-disabled:cursor-not-allowed aria-disabled:border-2 aria-disabled:border-gray-500
+             aria-disabled:bg-gray-400"
             aria-readonly
             onClick={async () => await handleCopy()}
+            id="copy-link-button"
           >
-            <BiLinkAlt
-              size={18}
-              className="mr-2 cursor-pointer"
-            />
+            <BiLinkAlt size={18} className="mr-2 cursor-pointer" />
             <input
-              className="p-2 font-mono font-normal w-full outline-none bg-transparent cursor-pointer"
+              className="w-full cursor-pointer bg-transparent p-2 font-mono font-normal outline-none"
               type="text"
               placeholder="Your link will appear here"
               value={draftLink}
               readOnly
+              id="link-output"
             />
           </div>
         </div>
         {errorMessage.trim().length > 0 ? (
-          <p className="text-red-400">{"*" + errorMessage}</p>
+          <p id="modal-error-msg" className="text-red-400">
+            {"*" + errorMessage}
+          </p>
         ) : null}
         {successMessage.trim().length > 0 ? (
-          <p className="text-green-400">{successMessage}</p>
+          <p id="modal-success-msg" className="text-green-400">
+            {successMessage}
+          </p>
         ) : null}
       </div>
     </div>

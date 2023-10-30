@@ -34,8 +34,8 @@ export const menuReducer = (
     case STORE_DRAFTS:
       return {
         ...state,
-        drafts: action.payload
-      }
+        drafts: action.payload,
+      };
     case UPDATE_SERIES:
       return {
         ...state,

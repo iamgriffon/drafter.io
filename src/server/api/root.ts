@@ -9,7 +9,7 @@ import { draftRouter } from "./routers/draft";
  */
 export const appRouter = createTRPCRouter({
   champion: championRouter,
-  draft: draftRouter
+  draft: draftRouter,
 });
 
 // export type definition of API

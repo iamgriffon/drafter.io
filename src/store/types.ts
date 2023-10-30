@@ -3,22 +3,22 @@ import { type JsonValue } from "@prisma/client/runtime/library";
 export type MatchWinner = "red" | "blue" | "none";
 
 export type Draft = {
-	blueSide: BlueSide;
-	redSide: RedSide;
+  blueSide: BlueSide;
+  redSide: RedSide;
 };
 
 export type Champion = {
-	id: string;
-	name: string;
-	image: string;
-	draftable: boolean | null;
+  id: string;
+  name: string;
+  image: string;
+  draftable: boolean | null;
 };
 
 export type GameSeries = {
-	series: Series;
-	winner: MatchWinner;
-	games: Game[];
-	id?: string;
+  series: Series;
+  winner: MatchWinner;
+  games: Game[];
+  id?: string;
 };
 
 export type DraftResponse = {
@@ -27,13 +27,13 @@ export type DraftResponse = {
   link: string;
   data: GameSeries | JsonValue;
   userId: string;
-}[]
+}[];
 
 export type Game = {
-	game: number;
-	winner: MatchWinner;
-	blueSide: BlueSide;
-	redSide: RedSide;
+  game: number;
+  winner: MatchWinner;
+  blueSide: BlueSide;
+  redSide: RedSide;
 };
 
 export type Series = "BO1" | "BO3" | "BO5";
@@ -61,7 +61,7 @@ export type DraftPosition =
   | "BB5";
 
 // Define an indexed type for DraftPosition
-type PositionData = Array<{ position: DraftPosition, champion: Champion }>
+type PositionData = Array<{ position: DraftPosition; champion: Champion }>;
 
 export interface BlueSide {
   picks: PositionData;

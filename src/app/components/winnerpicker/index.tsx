@@ -9,24 +9,27 @@ export function WinnerPicker({ onSelectWinner }: WinnerPickerProps) {
   const { state } = useAppContext();
 
   return (
-    <div className="flex pl-3 left-[76%] mt-5 justify-start flex-col items-center">
-      <span className="text-xs px-[1/2] -mt-5 font-bold mb-2">Pick Winner</span>
+    <div className="left-[76%] mt-5 flex flex-col items-center justify-start pl-3">
+      <span className="-mt-5 mb-2 px-[1/2] text-xs font-bold">Pick Winner</span>
       <div className="flex gap-3">
         <button
-          className="bg-blue-600 h-10 w-10 rounded-full focus:border-2 focus:border-gray-200"
+          className="h-10 w-10 rounded-full bg-blue-600 focus:border-2 focus:border-gray-200"
           onClick={() => onSelectWinner("blue")}
+          id="blue-winner-button"
         ></button>
-        <p className="text-xl place-self-center">|</p>
+        <p className="place-self-center text-xl">|</p>
         <button
-          className="bg-red-600 h-10 w-10 rounded-full focus:border-2 focus:border-gray-200"
+          className="h-10 w-10 rounded-full bg-red-600 focus:border-2 focus:border-gray-200"
           onClick={() => onSelectWinner("red")}
+          id="red-winner-button"
         ></button>
         {state.menu.scrim && (
           <>
-            <p className="text-xl place-self-center">|</p>
+            <p className="place-self-center text-xl">|</p>
             <button
-              className="bg-white h-10 w-10 rounded-full focus:border-2 focus:border-gray-200"
+              className="h-10 w-10 rounded-full bg-white focus:border-2 focus:border-gray-200"
               onClick={() => onSelectWinner("none")}
+              id="none-winner-button"
             ></button>
           </>
         )}

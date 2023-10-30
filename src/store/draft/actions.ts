@@ -88,7 +88,7 @@ export const updateDraftGameWinner = (
       payload: updatedGames,
     };
   }
-  
+
   return {
     type: UPDATE_GAME_WINNER,
     gameIndex,
@@ -138,31 +138,33 @@ export const updateDraftSeries = (
   };
 };
 
-export const purgeDraftWinner = (state: GameSeries): PurgeGamesWinnersAction => {
-  const winner: MatchWinner = "none"
-  const currentGames = [...state.games].map(game => {
+export const purgeDraftWinner = (
+  state: GameSeries,
+): PurgeGamesWinnersAction => {
+  const winner: MatchWinner = "none";
+  const currentGames = [...state.games].map((game) => {
     return {
       ...game,
-      winner
-    }
-  })
-  
+      winner,
+    };
+  });
+
   return {
     type: PURGE_WINNERS,
-    payload: currentGames
-  }
-}
+    payload: currentGames,
+  };
+};
 
 export const updateDraftID = (id: string): UpdateDraftIDAction => {
   return {
     type: UPDATE_ID,
-    payload: id
-  }
-}
+    payload: id,
+  };
+};
 
 export const updateFullDraft = (Draft: GameSeries): UpdateDraftAction => {
   return {
     type: UPDATE_DRAFT,
-    payload: Draft
-  }
-}
+    payload: Draft,
+  };
+};

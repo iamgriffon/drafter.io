@@ -25,11 +25,10 @@ export function ImportModal({
   errorMessage,
   setErrorMessage,
 }: ImportModalProps) {
-
   useEffect(() => {
     setStep(0);
     setErrorMessage("");
-  },[setErrorMessage, setStep]);
+  }, [setErrorMessage, setStep]);
 
   const [draftLink, setDraftLink] = useState(link);
   const [loading, setLoading] = useState(false);
@@ -42,7 +41,7 @@ export function ImportModal({
     {
       enabled: false,
       refetchOnMount: false,
-    }
+    },
   );
   const hasError = errorMessage.trim().length && !isLoading;
 
@@ -63,17 +62,22 @@ export function ImportModal({
     setStep(1);
     if (!draftLink.includes("https://")) {
       setDraftLink((prevState) => `https://drafter.io/${prevState}`);
-    };
+    }
 
     return await refetch().then((res) => {
       if (res.data?.data?.data) {
         const parsedData = JSON.parse(JSON.stringify(res.data?.data.data));
-        dispatch({type: 'draft', action: updateDraftID(res.data.data.id)});
+        dispatch({ type: "draft", action: updateDraftID(res.data.data.id) });
         setLink(res.data.data.link);
-        res.data.data.data && typeof parsedData.series === "string" && dispatch({type: 'menu', action: updateMenuSeries(parsedData.series as Series)});
+        res.data.data.data &&
+          typeof parsedData.series === "string" &&
+          dispatch({
+            type: "menu",
+            action: updateMenuSeries(parsedData.series as Series),
+          });
         importDraft(parsedData as GameSeries);
         setStep(2);
-        dispatch({type: 'menu', action: selectGame(1)});
+        dispatch({ type: "menu", action: selectGame(1) });
         setTimeout(() => {
           closeModal();
         }, 200);
@@ -92,60 +96,75 @@ export function ImportModal({
     }
   }
 
-  const buttonStepMap: ButtonStepMap  = {
-    0:  <p onClick={onImportDraft} className="self-center">GO!</p>,
-    1: <FaSpinner className="animate-spin self-center w-6 h-6" />,
-    2: <FaCheck onClick={closeModal} className="w-6 h-6 self-center" />
+  const buttonStepMap: ButtonStepMap = {
+    0: (
+      <p onClick={onImportDraft} className="self-center">
+        GO!
+      </p>
+    ),
+    1: <FaSpinner className="h-6 w-6 animate-spin self-center" />,
+    2: <FaCheck onClick={closeModal} className="h-6 w-6 self-center" />,
   };
 
   return (
-    <div className="flex font-bold text-gray-800 mt-10 bg-slate-400 w-[45%] opacity-100 rounded-lg h-48 flex-col justify-between border-gray-700 p-8">
-      <div className="flex justify-between items-start">
-        <p className="text-white mb-4 drop-shadow-lg shadow-black text-lg">
+    <div
+      id="modal-wrapper"
+      className="mt-10 flex h-48 w-[45%] flex-col justify-between rounded-lg border-gray-700 bg-slate-400 p-8 font-bold text-gray-800 opacity-100"
+    >
+      <div className="flex items-start justify-between">
+        <p
+          id="modal-label"
+          className="mb-4 text-lg text-white shadow-black drop-shadow-lg"
+        >
           {label} Draft
         </p>
         <Dialog.Close
-          className="font-bold text-white text-lg"
+          className="text-lg font-bold text-white"
           onClick={() => closeModal()}
+          id="close-modal"
         >
-					X
+          X
         </Dialog.Close>
       </div>
       <div>
-        <p className="text-white">Enter your link below</p>
+        <label htmlFor="modal-input" id="input-label" className="text-white">
+          Enter your link below
+        </label>
         <div className="flex w-full items-center justify-between gap-2">
-          <div className="p-4 h-12 rounded-md w-full flex items-center bg-white">
-            <BiLinkAlt
-              size={18}
-              className="mr-2"
-            />
+          <div className="flex h-12 w-full items-center rounded-md bg-white p-4">
+            <BiLinkAlt size={18} className="mr-2" />
             <input
-              className="p-2 font-mono text-sm font-normal w-full outline-none bg-transparent"
+              className="w-full bg-transparent p-2 font-mono text-sm font-normal outline-none"
               type="text"
               value={draftLink}
               onChange={(e) => onChange(e)}
+              id="modal-input"
             />
           </div>
           {!errorMessage.trim().length ? (
             <button
-              className="w-32 h-12 rounded-lg flex justify-center bg-green-500 opacity-100 font-bold text-white hover:bg-green-600 transition-colors"
+              className="flex h-12 w-32 justify-center rounded-lg bg-green-500 font-bold text-white opacity-100 transition-colors hover:bg-green-600"
+              id="input-submit-button-success"
             >
-              { buttonStepMap[step] }
+              {buttonStepMap[step]}
             </button>
           ) : (
             <button
-              className="w-32 h-12 rounded-lg flex justify-center bg-red-500 opacity-100 font-bold text-white hover:bg-red-600 transition-colors"
+              id="input-submit-button-error"
+              className="flex h-12 w-32 justify-center rounded-lg bg-red-500 font-bold text-white opacity-100 transition-colors hover:bg-red-600"
               onClick={() => {
                 onImportDraft();
               }}
             >
-              <TbError404 className="w-6 h-6 self-center" />
+              <TbError404 className="h-6 w-6 self-center" />
             </button>
           )}
         </div>
       </div>
       {errorMessage.trim().length ? (
-        <p className="text-red-500 mt-1">* {errorMessage}</p>
+        <p id="modal-error-msg" className="mt-1 text-red-500">
+          * {errorMessage}
+        </p>
       ) : null}
     </div>
   );

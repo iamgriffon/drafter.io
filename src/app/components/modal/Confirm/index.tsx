@@ -23,9 +23,9 @@ export function ConfirmModal({
     setStep(0);
     setErrorMessage("");
     setSuccessMessage("");
-  },[setErrorMessage, setStep, setSuccessMessage]);
+  }, [setErrorMessage, setStep, setSuccessMessage]);
 
-  const {  mutate, data } = api.draft.checkOwner.useMutation();
+  const { mutate, data } = api.draft.checkOwner.useMutation();
   const user = useUser();
   const { user: userProps } = user;
 
@@ -35,18 +35,23 @@ export function ConfirmModal({
       if (label === "Delete") setSuccessMessage("Sucessfuly Deleted!");
       if (label === "Update") {
         if (!userProps) return;
-        mutate({
-          link: link,
-          user_id: userProps.id
-        }, {
-          onSuccess: () => {
-            if (data !== undefined) {
-              data.success.valueOf() === false && setErrorMessage(data.message);
-              data.success.valueOf() === true && setSuccessMessage(data.message);
-              setStep(2);
-            };
-          }
-        });
+        mutate(
+          {
+            link: link,
+            user_id: userProps.id,
+          },
+          {
+            onSuccess: () => {
+              if (data !== undefined) {
+                data.success.valueOf() === false &&
+                  setErrorMessage(data.message);
+                data.success.valueOf() === true &&
+                  setSuccessMessage(data.message);
+                setStep(2);
+              }
+            },
+          },
+        );
       }
       setTimeout(() => {
         setStep(2);
@@ -55,62 +60,68 @@ export function ConfirmModal({
     });
   }
 
+  interface ButtonStepMap {
+    [key: number]: JSX.Element;
+  }
 
-	interface ButtonStepMap {
-		[key: number]: JSX.Element;
-	}
+  const buttonStepMap: ButtonStepMap = {
+    0: (
+      <FaCheck onClick={() => handleClick()} className="h-6 w-6 self-center" />
+    ),
+    1: <FaSpinner className="h-6 w-6 animate-spin self-center" />,
+    2: <FaCheck onClick={() => closeModal()} className="h-6 w-6 self-center" />,
+  };
 
-	const buttonStepMap: ButtonStepMap = {
-	  0: (
-	    <FaCheck
-	      onClick={() => handleClick()}
-	      className="w-6 h-6 self-center"
-	    />
-	  ),
-	  1: <FaSpinner className="animate-spin self-center w-6 h-6" />,
-	  2: (
-	    <FaCheck
-	      onClick={() => closeModal()}
-	      className="w-6 h-6 self-center"
-	    />
-	  ),
-	};
-
-	return (
-	  <div className="flex font-bold text-gray-800 mt-10 bg-slate-400 w-1/4 opacity-100 rounded-lg h-56 flex-col justify-between border-gray-700 p-8">
-	    <div className="flex justify-between items-start">
-	      <div className="flex flex-col text-white mb-4 drop-shadow-lg shadow-black text-lg">
-	        {label} Draft { label !== "Create" && <p className="font-thin">{name}</p> }
-	      </div>
-	      <Dialog.Close
-	        className="font-bold text-white text-lg"
-	        onClick={() => closeModal()}
-	      >
-					X
-	      </Dialog.Close>
-	    </div>
-	    <div>
-	      <p className="text-white">Are you sure about that?</p>
-	      <div className="flex w-full items-center justify-between gap-2 mt-2">
-	        <button className="w-32 h-12 rounded-lg flex justify-center bg-green-500 opacity-100 font-bold text-white hover:bg-green-600 transition-colors">
-	          {buttonStepMap[step]}
-	        </button>
-	        <button className="w-32 h-12 rounded-lg flex justify-center bg-red-500 opacity-100 font-bold text-white hover:bg-red-600 transition-colors">
-	          <ImCross
-	            onClick={() => closeModal()}
-	            className="w-6 h-6 self-center"
-	          />
-	        </button>
-	      </div>
-	    </div>
-	    <div className="flex flex-col gap-2">
-	      {successMessage.trim().length > 0 ? (
-	        <p className="mt-1 text-green-200">{successMessage}</p>
-	      ) : null}
-	      {errorMessage.trim().length > 0 ? (
-	        <p className="mt-1 text-red-200">{errorMessage}</p>
-	      ) : null}
-	    </div>
-	  </div>
-	);
+  return (
+    <div
+      id="modal-wrapper"
+      className="mt-10 flex h-56 w-1/4 flex-col justify-between rounded-lg border-gray-700 bg-slate-400 p-8 font-bold text-gray-800 opacity-100"
+    >
+      <div className="flex items-start justify-between">
+        <div className="mb-4 flex flex-col text-lg text-white shadow-black drop-shadow-lg">
+          {label} Draft{" "}
+          {label !== "Create" && <p className="font-thin">{name}</p>}
+        </div>
+        <Dialog.Close
+          className="text-lg font-bold text-white"
+          onClick={() => closeModal()}
+          id="close-modal"
+        >
+          X
+        </Dialog.Close>
+      </div>
+      <div>
+        <p id="modal-confirmation-text" className="text-white">
+          Are you sure about that?
+        </p>
+        <div className="mt-2 flex w-full items-center justify-between gap-2">
+          <button
+            id="confirm-button"
+            className="flex h-12 w-32 justify-center rounded-lg bg-green-500 font-bold text-white opacity-100 transition-colors hover:bg-green-600"
+          >
+            {buttonStepMap[step]}
+          </button>
+          <button className="flex h-12 w-32 justify-center rounded-lg bg-red-500 font-bold text-white opacity-100 transition-colors hover:bg-red-600">
+            <ImCross
+              onClick={() => closeModal()}
+              className="h-6 w-6 self-center"
+              id="close-modal"
+            />
+          </button>
+        </div>
+      </div>
+      <div className="flex flex-col gap-2">
+        {successMessage.trim().length > 0 ? (
+          <p id="modal-success-msg" className="mt-1 text-green-200">
+            {successMessage}
+          </p>
+        ) : null}
+        {errorMessage.trim().length > 0 ? (
+          <p id="modal-error-msg" className="mt-1 text-red-200">
+            {errorMessage}
+          </p>
+        ) : null}
+      </div>
+    </div>
+  );
 }

@@ -4,26 +4,25 @@ import { type BlueSide, type DraftPosition, type RedSide } from "@/store/types";
 import Image from "next/image";
 
 interface RedSideBansProps {
-	side: BlueSide | RedSide;
+  side: BlueSide | RedSide;
 }
 
 export function SideBans({ side }: RedSideBansProps) {
-
   const { dispatch } = useAppContext();
 
   function onSelectSlot(position: DraftPosition) {
-    dispatch({ type: 'menu', action: selectPosition(position) })
-  };
-    
+    dispatch({ type: "menu", action: selectPosition(position) });
+  }
+
   return (
-    <div className="flex gap-3.5 -mt-3">
+    <div className="-mt-3 flex gap-3.5">
       {side.bans.map((ban, index) => (
         <div
-          className="flex flex-col gap-4 items-center justify-evenly"
+          className="flex flex-col items-center justify-evenly gap-4"
           key={index}
         >
           <button
-            className="border-4 border-gray-400 w-14 h-14 bg-slate-600 focus:border-gray-300"
+            className="h-14 w-14 border-4 border-gray-400 bg-slate-600 focus:border-gray-300"
             onClick={() => onSelectSlot(ban.position)}
           >
             {ban.champion.image.length >= 1 ? (
@@ -33,6 +32,7 @@ export function SideBans({ side }: RedSideBansProps) {
                 height={90}
                 alt={ban.champion.name}
                 priority
+                id={`ban-position-${ban.position}`}
               />
             ) : (
               <Image
@@ -40,6 +40,7 @@ export function SideBans({ side }: RedSideBansProps) {
                 width={90}
                 height={90}
                 alt="placeholder"
+                id={`ban-placeholder-${ban.position}`}
               />
             )}
           </button>

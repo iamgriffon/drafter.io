@@ -42,7 +42,7 @@ export interface ExportModalProps {
   errorMessage: string;
   setErrorMessage: (param: string) => void;
   successMessage: string;
-  setSuccessMessage: (param: string) => void
+  setSuccessMessage: (param: string) => void;
 }
 
 export interface ShareModalProps {
@@ -52,13 +52,13 @@ export interface ShareModalProps {
   step: number;
   setStep: (param: number) => void;
   successMessage: string;
-  setSuccessMessage: (param: string) => void
+  setSuccessMessage: (param: string) => void;
 }
 
 export interface ConfirmModalProps {
   closeModal: () => void;
   label: OperationsMapEnum;
-  link: string,
+  link: string;
   name: string;
   onAccept: (param: () => void) => void;
   step: number;
@@ -66,7 +66,7 @@ export interface ConfirmModalProps {
   errorMessage: string;
   setErrorMessage: (param: string) => void;
   successMessage: string;
-  setSuccessMessage: (param: string) => void
+  setSuccessMessage: (param: string) => void;
 }
 
 export interface RenameModalProps {
@@ -78,10 +78,9 @@ export interface RenameModalProps {
   setSuccessMessage: (param: string) => void;
   link: string;
   name: string;
-  setName: (param: string) => void
+  setName: (param: string) => void;
   id: string;
 }
-
 
 export function Modal({
   closeModal,
@@ -94,9 +93,8 @@ export function Modal({
   setName,
   onDeleteDraft,
   onUpdateDraft,
-  onCreateNew
+  onCreateNew,
 }: ModalPageProps) {
-
   const [step, setStep] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -113,7 +111,6 @@ export function Modal({
     setErrorMessage(message);
   }, []);
 
-  
   const ModalMap = {
     Import: (
       <ImportModal
@@ -208,11 +205,14 @@ export function Modal({
         setName={setName}
         id={id}
       />
-    )
+    ),
   };
 
   return (
-    <Dialog.Content className="w-full h-full bg-slate-700 bg-opacity-90 z-10  flex flex-col items-center content-center fixed">
+    <Dialog.Content
+      id="modal-content"
+      className="fixed z-10 flex h-full w-full  flex-col content-center items-center bg-slate-700 bg-opacity-90"
+    >
       {ModalMap[label]}
     </Dialog.Content>
   );

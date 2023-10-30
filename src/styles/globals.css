@@ -3,13 +3,12 @@
 @tailwind utilities;
 
 @layer base {
-
   .font-roboto {
-    font-family: 'Roboto', sans-serif;
+    font-family: "Roboto", sans-serif;
   }
 
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Mono:wght@700&family=Roboto:wght@400;700&display=swap');
+  @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Mono:wght@700&family=Roboto:wght@400;700&display=swap");
   html {
-    @apply text-gray-100 font-roboto
+    @apply font-roboto text-gray-100;
   }
 }

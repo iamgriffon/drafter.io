@@ -1,4 +1,9 @@
-import { type GameSeries, type Game, type MatchWinner, type Series } from "../types";
+import {
+  type GameSeries,
+  type Game,
+  type MatchWinner,
+  type Series,
+} from "../types";
 
 export const UPDATE_SERIES = "UPDATE_SERIES";
 export const UPDATE_GAME = "UPDATE_GAME";
@@ -41,11 +46,11 @@ export interface PurgeGamesWinnersAction {
 export interface UpdateDraftIDAction {
   type: typeof UPDATE_ID;
   payload: string;
-};
+}
 
 export interface UpdateDraftAction {
   type: typeof UPDATE_DRAFT;
-  payload: GameSeries
+  payload: GameSeries;
 }
 
 export type DraftActions =
@@ -55,5 +60,4 @@ export type DraftActions =
   | UpdateSeriesWinnerAction
   | PurgeGamesWinnersAction
   | UpdateDraftIDAction
-  | UpdateDraftAction
-  ;
+  | UpdateDraftAction;

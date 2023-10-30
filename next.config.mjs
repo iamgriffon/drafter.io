@@ -9,15 +9,15 @@ const config = {
   images: {
     remotePatterns: [
       {
-        protocol: 'http',
-        hostname: 'ddragon.leagueoflegends.com',
+        protocol: "http",
+        hostname: "ddragon.leagueoflegends.com",
       },
       {
-        protocol: 'https',
-        hostname: 'img.clerk.com'
-      }
-    ]
-  }
+        protocol: "https",
+        hostname: "img.clerk.com",
+      },
+    ],
+  },
 };
 
 export default config;

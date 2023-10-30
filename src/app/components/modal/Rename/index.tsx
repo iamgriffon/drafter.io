@@ -23,21 +23,21 @@ export function RenameModal({
   link,
   name,
   setName,
-  id
+  id,
 }: RenameModalProps) {
-  const { mutateAsync, isLoading, isSuccess } =
-    api.draft.update.useMutation();
+  const { mutateAsync, isLoading, isSuccess } = api.draft.update.useMutation();
   const { state, dispatch } = useAppContext();
   const { user } = useUser();
-  const currentDraft = state.menu.drafts.find(draft => draft.id === id)?.data!
+  const currentDraft = state.menu.drafts.find((draft) => draft.id === id)
+    ?.data!;
   const isDraftValid = validateGameSeries(currentDraft as GameSeries);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [step, setStep] = useState(1);
 
   const updateStep = useCallback((step: number) => {
-    setStep(step)
-  },[]);
+    setStep(step);
+  }, []);
 
   useEffect(() => {
     setLoading(false);
@@ -47,8 +47,9 @@ export function RenameModal({
     setSuccessMessage("");
   }, [setErrorMessage, updateStep, setSuccessMessage]);
 
-  let user_id: string = '';
-  let draft = state.menu.drafts.find(draft => draft.id === id)?.data! as GameSeries;
+  let user_id: string = "";
+  let draft = state.menu.drafts.find((draft) => draft.id === id)
+    ?.data! as GameSeries;
 
   const onRenameDraft = async () => {
     if (!getErrorMessage()) return;
@@ -56,15 +57,18 @@ export function RenameModal({
     setSuccessMessage("");
     if (user) user_id = user.id;
     setStep(1);
-    await mutateAsync({
-      draft: draft,
-      link: link,
-      name: name
-    }, {
-      onError: (error) => {
-        console.log(error);
-      }
-    }).then((res) => {
+    await mutateAsync(
+      {
+        draft: draft,
+        link: link,
+        name: name,
+      },
+      {
+        onError: (error) => {
+          console.log(error);
+        },
+      },
+    ).then((res) => {
       if (res && res?.success === true) {
         setSuccessMessage("Successfuly Renamed!");
         setStep(2);
@@ -73,7 +77,7 @@ export function RenameModal({
         setStep(0);
       }
     });
-  }
+  };
 
   function getErrorMessage() {
     if (!isDraftValid) {
@@ -94,69 +98,75 @@ export function RenameModal({
 
   const buttonStepMap: ButtonStepMap = {
     0: (
-      <p
-        onClick={() => onRenameDraft()}
-        className="self-center"
-      >
+      <p onClick={() => onRenameDraft()} className="self-center">
         GO!
       </p>
     ),
-    1: <FaSpinner className="animate-spin self-center w-6 h-6" />,
-    2: (
-      <FaCheck
-        onClick={() => closeModal()}
-        className="w-6 h-6 self-center"
-      />
-    ),
+    1: <FaSpinner className="h-6 w-6 animate-spin self-center" />,
+    2: <FaCheck onClick={() => closeModal()} className="h-6 w-6 self-center" />,
   };
 
   return (
-    <div className="flex font-bold text-gray-800 mt-10 bg-slate-400 w-4/12 opacity-100 rounded-lg h-48 flex-col justify-between border-gray-700 p-8">
-      <div className="flex justify-between items-start">
-        <p className="text-white mb-4 drop-shadow-lg shadow-black text-lg">
+    <div
+      id="modal-wrapper"
+      className="mt-10 flex h-48 w-4/12 flex-col justify-between rounded-lg border-gray-700 bg-slate-400 p-8 font-bold text-gray-800 opacity-100"
+    >
+      <div className="flex items-start justify-between">
+        <p
+          id="modal-label"
+          className="mb-4 text-lg text-white shadow-black drop-shadow-lg"
+        >
           {label} Draft
         </p>
         <Dialog.Close
-          className="font-bold text-white text-lg"
+          className="text-lg font-bold text-white"
           onClick={() => closeModal()}
+          id="close-modal"
         >
           X
         </Dialog.Close>
       </div>
 
       <div className="flex flex-col gap-2">
-        <p className="text-white">Give your draft a new name:</p>
+        <label htmlFor="modal-input" id="input-label" className="text-white">
+          Give your Draft a new name:
+        </label>
         <section className="flex gap-2">
-          <div className="p-4 h-12 rounded-md w-full flex flex-row items-center bg-white">
+          <div className="flex h-12 w-full flex-row items-center rounded-md bg-white p-4">
             <input
-              className="p-2 font-mono font-normal w-[80%] outline-none bg-transparent"
+              className="w-[80%] bg-transparent p-2 font-mono font-normal outline-none"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              id="modal-input"
             />
           </div>
           <div>
             {!errorMessage.trim().length ? (
-              <button className="w-12 h-12 flex items-center justify-center rounded-lg bg-green-500 opacity-100 font-bold text-white hover:bg-green-600 transition-colors">
+              <button className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-500 font-bold text-white opacity-100 transition-colors hover:bg-green-600">
                 {buttonStepMap[step]}
               </button>
             ) : (
               <button
-                className="w-32 h-12 rounded-lg flex justify-center bg-red-500 opacity-100 font-bold text-white hover:bg-red-600 transition-colors"
+                className="flex h-12 w-32 justify-center rounded-lg bg-red-500 font-bold text-white opacity-100 transition-colors hover:bg-red-600"
                 onClick={() => {
                   onRenameDraft();
                 }}
               >
-                <TbError404 className="w-6 h-6 self-center" />
+                <TbError404 className="h-6 w-6 self-center" />
               </button>
             )}
           </div>
         </section>
         {errorMessage.trim().length > 0 ? (
-          <p className="text-red-400">{"*" + errorMessage}</p>
+          <p id="modal-error-msg" className="text-red-400">
+            {"*" + errorMessage}
+          </p>
         ) : null}
         {successMessage.trim().length > 0 ? (
-          <p className="text-green-400">{successMessage}</p>
+          <p id="modal-success-msg" className="text-green-400">
+            {successMessage}
+          </p>
         ) : null}
       </div>
     </div>

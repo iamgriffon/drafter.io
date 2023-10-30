@@ -18,7 +18,7 @@ import {
   UPDATE_WINNER,
   SELECT_POSITION,
   UPDATE_SERIES,
-  STORE_DRAFTS
+  STORE_DRAFTS,
 } from "./types";
 
 export const selectGame = (game: number): SelectGameAction => {
@@ -79,13 +79,13 @@ export const selectPosition = (
 export const updateMenuSeries = (series: Series): UpdateSeriesAction => {
   return {
     type: UPDATE_SERIES,
-    payload: series
-  }
-}
+    payload: series,
+  };
+};
 
 export const storeDrafts = (drafts: Draft[]): StoreDraftsAction => {
   return {
     type: STORE_DRAFTS,
-    payload: drafts
-  }
-}
+    payload: drafts,
+  };
+};

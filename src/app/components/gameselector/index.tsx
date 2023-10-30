@@ -4,7 +4,6 @@ import { type Game } from "@/store/types";
 export interface MenuProps {
   games: Game[];
   onSelectMatch: (param: number) => void;
-
 }
 
 const baseStyle =
@@ -16,19 +15,20 @@ export function GamePickerButtons({ games, onSelectMatch }: MenuProps) {
   const stage = !scrim;
 
   return (
-    <div className="flex gap-3 relative">
+    <div className="relative flex gap-3">
       {games.map((game, index) => {
-        const { game: gameIndex } = game
-        const isDisabled = stage && index > 0 && games[index - 1]!.winner === 'none';
+        const { game: gameIndex } = game;
+        const isDisabled =
+          stage && index > 0 && games[index - 1]!.winner === "none";
         const isCurrentGame = () => {
           let styles;
-          if (game.game === menuGame){
-            styles = 'border-4'
+          if (game.game === menuGame) {
+            styles = "border-4";
           } else {
-            styles = 'border-[1px]'
+            styles = "border-[1px]";
           }
-          return styles
-        }
+          return styles;
+        };
 
         const winnerStyle = () => {
           let styles;
@@ -47,16 +47,14 @@ export function GamePickerButtons({ games, onSelectMatch }: MenuProps) {
         return (
           <button
             key={index}
-            className={
-              `${baseStyle}
+            className={`${baseStyle}
                ${winnerStyle()}
                ${isCurrentGame()}
-              `
-            }
-            onClick={() => onSelectMatch(gameIndex)
-            }
+              `}
+            onClick={() => onSelectMatch(gameIndex)}
             autoFocus={index === 0}
             disabled={isDisabled}
+            id={`game-${gameIndex}-selector`}
           >
             {scrim ? "Game" : "Draft"} {game.game}
           </button>
@@ -65,4 +63,3 @@ export function GamePickerButtons({ games, onSelectMatch }: MenuProps) {
     </div>
   );
 }
-

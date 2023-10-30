@@ -9,7 +9,13 @@ import * as Dialog from "@radix-ui/react-dialog";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import Image from "next/image";
 import React, { useCallback, useEffect, useState } from "react";
-import { BiChevronRight, BiExport, BiImport, BiPencil, BiTrash } from "react-icons/bi";
+import {
+  BiChevronRight,
+  BiExport,
+  BiImport,
+  BiPencil,
+  BiTrash,
+} from "react-icons/bi";
 import { IoMdSettings } from "react-icons/io";
 import { Modal } from "../modal";
 
@@ -22,9 +28,7 @@ export type OperationsMapEnum =
   | "Create"
   | "Rename";
 
-
 export function NavBar() {
-
   const user = useUser();
   const [open, setOpen] = useState(false);
   const [id, setId] = useState("");
@@ -44,7 +48,7 @@ export function NavBar() {
     {
       enabled: true,
       refetchOnMount: true,
-    }
+    },
   );
 
   const onDeleteDraft = useCallback(
@@ -56,10 +60,10 @@ export function NavBar() {
         },
         {
           onSettled: () => callback(),
-        }
+        },
       );
     },
-    [deleteDraft, id, userProps]
+    [deleteDraft, id, userProps],
   );
 
   const onUpdateDraft = useCallback(
@@ -72,47 +76,49 @@ export function NavBar() {
         },
         {
           onSettled: () => callback(),
-        }
+        },
       );
     },
-    [state.draft, updateDraft, name, link]
+    [state.draft, updateDraft, name, link],
   );
 
   const fetchDrafts = useCallback(async () => {
     const response = await refetch();
-    if (response.data) dispatch({ type: 'menu', action: storeDrafts(response.data) });
+    if (response.data)
+      dispatch({ type: "menu", action: storeDrafts(response.data) });
   }, [dispatch, refetch]);
 
   const onCreateNew = useCallback(
     (callback: () => void) => {
-      dispatch({ type: 'draft', action: updateFullDraft(DEFAULT_BO1_STATE) });
+      dispatch({ type: "draft", action: updateFullDraft(DEFAULT_BO1_STATE) });
       callback();
-    }, [dispatch]);
-
+    },
+    [dispatch],
+  );
 
   function openModal(param: OperationsMapEnum, callback?: () => void) {
     if (callback) callback();
     setLabel(param);
     setOpen(true);
-  };
+  }
 
   const selectedMatch = () => {
     return games[game - 1]!;
-  }
+  };
 
   const importDraft = (param: GameSeries) => {
-    dispatch({ type: 'draft', action: updateFullDraft(param) });
+    dispatch({ type: "draft", action: updateFullDraft(param) });
   };
 
   const updated = () => {
     return {
-      drafts: state.menu.drafts
-    }
+      drafts: state.menu.drafts,
+    };
   };
 
   useEffect(() => {
-    fetchDrafts()
-  },[open, user.user?.id]);
+    fetchDrafts();
+  }, [open, user.user?.id]);
 
   const updateLink = useCallback((link: string) => {
     setLink(link);
@@ -126,38 +132,48 @@ export function NavBar() {
     <>
       <Dialog.Root defaultOpen={false} open={open}>
         <DropdownMenu.Root>
-          <nav className="flex flex-row justify-between self-center items-center py-3 px-8 w-full max-w-[1440px] border-b-2">
+          <nav
+            id="navbar"
+            className="flex w-full max-w-[1440px] flex-row items-center justify-between self-center border-b-2 px-8 py-3"
+          >
             <section className="flex flex-row gap-8">
-              <span className="text-gray-100 font-bold hover:text-gray-300 cursor-pointer" onClick={() => openModal("Import")}>
+              <span
+                className="cursor-pointer font-bold text-gray-100 hover:text-gray-300"
+                onClick={() => openModal("Import")}
+              >
                 {"Import"}
               </span>
               {!!user.isSignedIn && (
                 <>
                   {!!user.isSignedIn &&
-                    games.length > 0 &&
-                    selectedMatch !== null ? (
+                  games.length > 0 &&
+                  selectedMatch !== null ? (
                     <button
-                      className="text-gray-100 font-bold   hover:text-gray-300 cursor-pointer"
+                      className="cursor-pointer font-bold   text-gray-100 hover:text-gray-300"
                       onClick={() => openModal("Export")}
+                      id="export-draft-button"
                     >
                       {"Export"}
                     </button>
                   ) : null}
                   <span
                     onClick={() => openModal("Share")}
-                    className="text-gray-100 font-bold hover:text-gray-300 cursor-pointer"
+                    className="cursor-pointer font-bold text-gray-100 hover:text-gray-300"
+                    id="share-button-button"
                   >
                     {"Share"}
                   </span>
                   <span
                     onClick={() => openModal("Update")}
-                    className="text-gray-100 font-bold hover:text-gray-300 cursor-pointer"
+                    className="cursor-pointer font-bold text-gray-100 hover:text-gray-300"
+                    id="update-draft-button"
                   >
                     {"Save"}
                   </span>
                   <span
-                    className="text-gray-100 font-bold   hover:text-gray-300 cursor-pointer"
+                    className="cursor-pointer font-bold   text-gray-100 hover:text-gray-300"
                     onClick={() => openModal("Create")}
+                    id="create-draft-button"
                   >
                     {"New"}
                   </span>
@@ -167,25 +183,33 @@ export function NavBar() {
             <section className="flex flex-row gap-4">
               {!!user.isSignedIn && (
                 <DropdownMenu.Trigger>
-                  <p className="font-bold">My Drafts</p>
+                  <p id="my-drafts" className="font-bold">
+                    My Drafts
+                  </p>
                 </DropdownMenu.Trigger>
               )}
               <DropdownMenu.Portal>
-                <DropdownMenu.Content sideOffset={5} className="z-10 flex flex-col gap-1 w-[10rem] mt-2 p-2 bg-white rounded-md shadow-md cursor-pointer">
-                  {updated().drafts.length > 0
-                    ? updated().drafts?.map((draft, index) => (
+                <DropdownMenu.Content
+                  sideOffset={5}
+                  className="z-10 mt-2 flex w-[10rem] cursor-pointer flex-col gap-1 rounded-md bg-white p-2 shadow-md"
+                >
+                  {updated().drafts.length > 0 ? (
+                    updated().drafts?.map((draft, index) => (
                       <React.Fragment key={index}>
                         <div className="flex flex-col text-gray-600 hover:text-gray-400">
                           <DropdownMenu.Sub>
                             <DropdownMenu.SubTrigger className="flex flex-row items-center justify-between">
-                              <p className="w-[90%]  text-gray-600 self-start p-2">
+                              <p
+                                id="draft-dropdown-selector"
+                                className="w-[90%]  self-start p-2 text-gray-600"
+                              >
                                 {draft.name}
                               </p>
                               <BiChevronRight size={24} />
                             </DropdownMenu.SubTrigger>
                             <DropdownMenu.Portal>
                               <DropdownMenu.SubContent
-                                className="z-10 flex flex-col gap-1 w-24 px-2 content-center justify-between bg-white rounded-md p-1 shadow-md cursor-pointer"
+                                className="z-10 flex w-24 cursor-pointer flex-col content-center justify-between gap-1 rounded-md bg-white p-1 px-2 shadow-md"
                                 sideOffset={10}
                                 alignOffset={5}
                                 hideWhenDetached
@@ -198,11 +222,13 @@ export function NavBar() {
                                       setLink(draft.link);
                                       setName(draft.name);
                                     });
-                                  }}>
+                                  }}
+                                  id="import-draft-submenu"
+                                >
                                   Import
                                   <BiImport size={18} />
                                 </DropdownMenu.Item>
-                                <DropdownMenu.Separator className="border-t border-gray-300 w-[80%] self-center" />
+                                <DropdownMenu.Separator className="w-[80%] self-center border-t border-gray-300" />
                                 <DropdownMenu.Item
                                   className="flex flex-row items-center justify-between text-gray-600 hover:text-gray-400"
                                   textValue="Delete"
@@ -211,11 +237,13 @@ export function NavBar() {
                                       setLink(draft.link);
                                       setName(draft.name);
                                     })
-                                  }>
+                                  }
+                                  id="share-draft-submenu"
+                                >
                                   Share
                                   <BiExport size={18} />
                                 </DropdownMenu.Item>
-                                <DropdownMenu.Separator className="border-t border-gray-300 w-[80%] self-center" />
+                                <DropdownMenu.Separator className="w-[80%] self-center border-t border-gray-300" />
                                 <DropdownMenu.Item
                                   className="flex flex-row items-center justify-between text-gray-600 hover:text-gray-400"
                                   textValue="Delete"
@@ -225,11 +253,13 @@ export function NavBar() {
                                       setLink(draft.link);
                                       setName(draft.name);
                                     });
-                                  }}>
+                                  }}
+                                  id="delete-draft-submenu"
+                                >
                                   Delete
                                   <BiTrash size={18} />
                                 </DropdownMenu.Item>
-                                <DropdownMenu.Separator className="border-t border-gray-300 w-[80%] self-center" />
+                                <DropdownMenu.Separator className="w-[80%] self-center border-t border-gray-300" />
                                 <DropdownMenu.Item
                                   className="flex flex-row items-center justify-between text-gray-600 hover:text-gray-400"
                                   textValue="Delete"
@@ -239,46 +269,50 @@ export function NavBar() {
                                       setLink(draft.link);
                                       setId(draft.id);
                                     });
-                                  }}>
+                                  }}
+                                  id="rename-draft-submenu"
+                                >
                                   Rename
                                   <BiPencil size={18} />
                                 </DropdownMenu.Item>
                               </DropdownMenu.SubContent>
                             </DropdownMenu.Portal>
                             {!(index + 1 >= drafts.length) && (
-                              <div className="border-t border-gray-300 w-[80%] self-center"></div>
+                              <div className="w-[80%] self-center border-t border-gray-300"></div>
                             )}
                           </DropdownMenu.Sub>
                         </div>
                       </React.Fragment>
                     ))
-                    : <div className='w-32 flex flex-col text-center'>
+                  ) : (
+                    <div className="flex w-32 flex-col text-center">
                       <DropdownMenu.Sub>
-                        <p className="text-gray-600">
+                        <p id="no-draft-popover" className="text-gray-600">
                           You currently have no drafts
                         </p>
                       </DropdownMenu.Sub>
                     </div>
-                  }
+                  )}
                 </DropdownMenu.Content>
               </DropdownMenu.Portal>
               <IoMdSettings
                 size={24}
-                className="fill-gray-100 cursor-pointer hover:fill-gray-300"
+                className="cursor-pointer fill-gray-100 hover:fill-gray-300"
               />
 
               {!!user.isSignedIn && (
-                <section className="rounded-full h-5">
+                <section className="h-5 rounded-full">
                   <Image
                     src={userProps?.imageUrl!}
-                    className="rounded-full cursor-pointer"
+                    className="cursor-pointer rounded-full"
                     width={24}
                     height={24}
                     alt="Profile Picture"
+                    id="profile-picture"
                   />
                 </section>
               )}
-              <div>
+              <div id={user.isSignedIn ? "sign-out" : "sign-"}>
                 {!user.isSignedIn && <SignInButton />}
                 {!!user.isSignedIn && <SignOutButton />}
               </div>
@@ -301,5 +335,5 @@ export function NavBar() {
         </DropdownMenu.Root>
       </Dialog.Root>
     </>
-  )
+  );
 }

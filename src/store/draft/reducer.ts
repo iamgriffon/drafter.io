@@ -43,8 +43,8 @@ export const draftReducer = (
       };
     case UPDATE_DRAFT:
       return {
-        ...action.payload
-      }
+        ...action.payload,
+      };
     default:
       return state;
   }

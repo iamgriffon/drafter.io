@@ -9,15 +9,15 @@ export const draftRouter = createTRPCRouter({
         draft: z.record(z.any()),
         link: z.string(),
         name: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const { user_id, draft, link, name } = input;
 
       const findUnique = await ctx.db.draft.findFirst({
         where: {
-          name: name
-        }
+          name: name,
+        },
       });
 
       if (findUnique) return { error: "Name already in use" };
@@ -42,7 +42,7 @@ export const draftRouter = createTRPCRouter({
     .input(
       z.object({
         link: z.string(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const { link } = input;
@@ -51,8 +51,8 @@ export const draftRouter = createTRPCRouter({
           link: link,
         },
       });
-      if (res){
-        return { data: res};
+      if (res) {
+        return { data: res };
       } else {
         return { error: "No Draft Found" };
       }
@@ -61,7 +61,7 @@ export const draftRouter = createTRPCRouter({
     .input(
       z.object({
         user_id: z.string(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const { user_id } = input;
@@ -78,7 +78,7 @@ export const draftRouter = createTRPCRouter({
         link: z.string(),
         name: z.string(),
         draft: z.record(z.any()),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const { link, draft, name } = input;
@@ -91,7 +91,7 @@ export const draftRouter = createTRPCRouter({
       if (!getDraft) {
         return {
           message:
-						"We were not able to find your draft, please try again later",
+            "We were not able to find your draft, please try again later",
           success: false,
         };
       }
@@ -115,7 +115,7 @@ export const draftRouter = createTRPCRouter({
       z.object({
         id: z.string(),
         user_id: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const { id, user_id } = input;
@@ -138,8 +138,10 @@ export const draftRouter = createTRPCRouter({
           .then((res) => res.data);
 
         if (deleteDraft) return { message: "Draft Deleted Successfully" };
-      } else if (!isDraftOwner){
-        return { message: "Error when deleting draft, Insufficient permissions" };
+      } else if (!isDraftOwner) {
+        return {
+          message: "Error when deleting draft, Insufficient permissions",
+        };
       } else if (!selectedDraft) {
         return { message: "Error when deleting draft, No draft found" };
       }
@@ -149,33 +151,33 @@ export const draftRouter = createTRPCRouter({
       z.object({
         user_id: z.string(),
         link: z.string(),
-      })
+      }),
     )
-    .mutation(async ({ctx, input}) => {
+    .mutation(async ({ ctx, input }) => {
       const { link, user_id } = input;
 
       const checkForOwner = await ctx.db.draft.findFirst({
         where: {
-          link: link
-        }
+          link: link,
+        },
       });
 
-      if (!checkForOwner) return {
-        message: "Internal Server Error",
-        success: false
-      };
+      if (!checkForOwner)
+        return {
+          message: "Internal Server Error",
+          success: false,
+        };
 
-      if (checkForOwner.userId === user_id){
+      if (checkForOwner.userId === user_id) {
         return {
           message: "Successfully Updated!",
-          success: true
+          success: true,
         };
-      }
-      else if (checkForOwner.userId !== user_id){
+      } else if (checkForOwner.userId !== user_id) {
         return {
           message: "Insufficient Permissions",
-          success: false
+          success: false,
         };
       }
-    })
+    }),
 });
