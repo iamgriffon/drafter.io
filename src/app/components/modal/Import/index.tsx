@@ -17,7 +17,7 @@ interface ButtonStepMap {
 export function ImportModal({
   closeModal,
   label,
-  onSubmit: importDraft,
+  importDraft,
   link,
   setLink,
   step,
@@ -31,8 +31,8 @@ export function ImportModal({
   }, [setErrorMessage, setStep]);
 
   const [draftLink, setDraftLink] = useState(link);
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [_, setLoading] = useState(false);
+  const [__, setSuccess] = useState(false);
   const { dispatch } = useAppContext();
   const { isLoading, isSuccess, refetch } = api.draft.import.useQuery(
     {

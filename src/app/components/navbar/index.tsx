@@ -1,6 +1,6 @@
 import { useAppContext } from "@/store/context";
 import { updateFullDraft } from "@/store/draft/actions";
-import { storeDrafts } from "@/store/menu/actions";
+import { storeDrafts, updateMenuSeries } from "@/store/menu/actions";
 import { type GameSeries } from "@/store/types";
 import { api } from "@/trpc/react";
 import { DEFAULT_BO1_STATE } from "@/utils/setDefaultValues";
@@ -108,6 +108,7 @@ export function NavBar() {
 
   const importDraft = (param: GameSeries) => {
     dispatch({ type: "draft", action: updateFullDraft(param) });
+    dispatch({  type: "menu", action: updateMenuSeries(param.series)});
   };
 
   const updated = () => {

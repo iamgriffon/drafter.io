@@ -8,8 +8,6 @@ interface SeriesPickerProps {
 
 export function SeriesPicker({ onSelectSeries }: SeriesPickerProps) {
   const { state } = useAppContext();
-  const { series, games, id } = state.draft;
-
   const [placeholder, setPlaceHolder] = useState(true);
   const updatePlaceHolder = useCallback(
     (hasSeries: boolean) => {
@@ -27,7 +25,7 @@ export function SeriesPicker({ onSelectSeries }: SeriesPickerProps) {
   return (
     <div className="flex items-center justify-center">
       <select
-        value={placeholder ? "DEFAULT" : series}
+        value={state.menu.series}
         onChange={(e) => {
           e.stopPropagation();
           const value = e.target.value;
@@ -38,13 +36,6 @@ export function SeriesPicker({ onSelectSeries }: SeriesPickerProps) {
         id="game-series-picker"
         placeholder="Select Series"
       >
-        <option
-          value="DEFAULT"
-          id="DEFAULT-PICKER"
-          defaultChecked={games.length == 1}
-        >
-          Select Series
-        </option>
         <option value="BO1" id="BO1">
           Best of 1
         </option>

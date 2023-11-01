@@ -26,7 +26,7 @@ export interface ModalPageProps {
 export interface ImportModalProps {
   closeModal: () => void;
   label: OperationsMapEnum;
-  onSubmit: (param: GameSeries) => void;
+  importDraft: (param: GameSeries) => void;
   link: string;
   setLink: (param: string) => void;
   step: number;
@@ -116,7 +116,7 @@ export function Modal({
       <ImportModal
         closeModal={closeModal}
         label={label}
-        onSubmit={importDraft}
+        importDraft={importDraft}
         link={link}
         setLink={setLink}
         step={step}
