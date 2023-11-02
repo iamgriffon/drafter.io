@@ -1,4 +1,5 @@
 import { type Game, type GameSeries } from "@/store/types";
+import { PLACEHOLDER_CHAMPION } from "./setDefaultValues";
 
 const isEmptyGame = (game: Game): boolean => {
   const { blueSide, redSide, winner } = game;
@@ -25,11 +26,11 @@ const isEmptyGame = (game: Game): boolean => {
 const isCompleteGame = (game: Game): boolean => {
   const { blueSide, redSide, winner } = game;
   const isBlueComplete =
-    blueSide.picks.every((pick) => pick.champion.name) &&
-    blueSide.bans.every((ban) => ban.champion.name);
+    blueSide.picks.every((pick) => pick.champion.name && pick.champion !== PLACEHOLDER_CHAMPION) &&
+    blueSide.bans.every((ban) => ban.champion.name && ban.champion !== PLACEHOLDER_CHAMPION);
   const isRedComplete =
-    redSide.picks.every((pick) => pick.champion.name) &&
-    redSide.bans.every((ban) => ban.champion.name);
+    redSide.picks.every((pick) => pick.champion.name && pick.champion !== PLACEHOLDER_CHAMPION) &&
+    redSide.bans.every((ban) => ban.champion.name && ban.champion !== PLACEHOLDER_CHAMPION);
   return isBlueComplete && isRedComplete && winner !== null;
 };
 
