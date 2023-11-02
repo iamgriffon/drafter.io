@@ -124,7 +124,7 @@ export function NavBar() {
 
   useEffect(() => {
     fetchDrafts();
-  }, [open, user.user?.id]);
+  }, [open, user.user?.id, fetchDrafts]);
 
   const updateLink = useCallback((link: string) => {
     setLink(link);

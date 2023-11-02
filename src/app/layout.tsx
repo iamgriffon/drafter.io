@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { TRPCReactProvider } from "@/trpc/react";
 import { AppProvider } from "@/store/context";
 import { ClerkProvider } from "@clerk/nextjs";
-import { GeistSans } from "geist/font";
+import { GeistMono, GeistSans } from "geist/font";
 
 export const metadata = {
   title: "Drafter.io",
@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`font-sans ${GeistSans.className} h-[100vh] w-full bg-gray-800`}
+        className={`font-sans ${GeistSans.variable} ${GeistMono.variable} h-[100vh] w-full bg-gray-800`}
       >
         <TRPCReactProvider headers={headers()}>
           <ClerkProvider>
