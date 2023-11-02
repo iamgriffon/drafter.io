@@ -6,49 +6,56 @@ import {
   type RedSide,
 } from "@/store/types";
 
+export const PLACEHOLDER_CHAMPION: Champion = {
+  id: "0001",
+  draftable: true,
+  image: "/champion_placeholder.webp",
+  name: "PLACEHOLDER",
+};
+
 export const DEFAULT_BLUE_SIDE_DRAFT_STATE: BlueSide = {
   picks: [
     {
       position: "B1",
-      champion: { id: "", draftable: true, name: "", image: "" },
+      champion: PLACEHOLDER_CHAMPION,
     },
     {
       position: "B2",
-      champion: { id: "", draftable: true, name: "", image: "" },
+      champion: PLACEHOLDER_CHAMPION,
     },
     {
       position: "B3",
-      champion: { id: "", draftable: true, name: "", image: "" },
+      champion: PLACEHOLDER_CHAMPION,
     },
     {
       position: "B4",
-      champion: { id: "", draftable: true, name: "", image: "" },
+      champion: PLACEHOLDER_CHAMPION,
     },
     {
       position: "B5",
-      champion: { id: "", draftable: true, name: "", image: "" },
+      champion: PLACEHOLDER_CHAMPION,
     },
   ],
   bans: [
     {
       position: "BB1",
-      champion: { id: "", draftable: true, name: "", image: "" },
+      champion: PLACEHOLDER_CHAMPION,
     },
     {
       position: "BB2",
-      champion: { id: "", draftable: true, name: "", image: "" },
+      champion: PLACEHOLDER_CHAMPION,
     },
     {
       position: "BB3",
-      champion: { id: "", draftable: true, name: "", image: "" },
+      champion: PLACEHOLDER_CHAMPION,
     },
     {
       position: "BB4",
-      champion: { id: "", draftable: true, name: "", image: "" },
+      champion: PLACEHOLDER_CHAMPION,
     },
     {
       position: "BB5",
-      champion: { id: "", draftable: true, name: "", image: "" },
+      champion: PLACEHOLDER_CHAMPION,
     },
   ],
 };
@@ -57,45 +64,45 @@ export const DEFAULT_RED_SIDE_DRAFT_STATE: RedSide = {
   picks: [
     {
       position: "R1",
-      champion: { id: "", draftable: true, name: "", image: "" },
+      champion: PLACEHOLDER_CHAMPION,
     },
     {
       position: "R2",
-      champion: { id: "", draftable: true, name: "", image: "" },
+      champion: PLACEHOLDER_CHAMPION,
     },
     {
       position: "R3",
-      champion: { id: "", draftable: true, name: "", image: "" },
+      champion: PLACEHOLDER_CHAMPION,
     },
     {
       position: "R4",
-      champion: { id: "", draftable: true, name: "", image: "" },
+      champion: PLACEHOLDER_CHAMPION,
     },
     {
       position: "R5",
-      champion: { id: "", draftable: true, name: "", image: "" },
+      champion: PLACEHOLDER_CHAMPION,
     },
   ],
   bans: [
     {
       position: "RB1",
-      champion: { id: "", draftable: true, name: "", image: "" },
+      champion: PLACEHOLDER_CHAMPION,
     },
     {
       position: "RB2",
-      champion: { id: "", draftable: true, name: "", image: "" },
+      champion: PLACEHOLDER_CHAMPION,
     },
     {
       position: "RB3",
-      champion: { id: "", draftable: true, name: "", image: "" },
+      champion: PLACEHOLDER_CHAMPION,
     },
     {
       position: "RB4",
-      champion: { id: "", draftable: true, name: "", image: "" },
+      champion: PLACEHOLDER_CHAMPION,
     },
     {
       position: "RB5",
-      champion: { id: "", draftable: true, name: "", image: "" },
+      champion: PLACEHOLDER_CHAMPION,
     },
   ],
 };

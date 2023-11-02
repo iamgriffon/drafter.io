@@ -131,7 +131,7 @@ export function ExportModal({
           {label} Draft
         </p>
         <Dialog.Close
-          className="text-lg font-bold text-white"
+          className="text-2xl font-bold text-white"
           onClick={() => closeModal()}
           id="close-modal"
         >
@@ -187,7 +187,9 @@ export function ExportModal({
             className="flex h-12 w-full cursor-pointer items-center rounded-md bg-white p-4 aria-disabled:cursor-not-allowed aria-disabled:border-2 aria-disabled:border-gray-500
              aria-disabled:bg-gray-400"
             aria-readonly
-            onClick={async () => await handleCopy()}
+            onClick={async () =>
+              draftLink.trim().length ? await handleCopy() : {}
+            }
             id="copy-link-button"
           >
             <BiLinkAlt size={18} className="mr-2 cursor-pointer" />

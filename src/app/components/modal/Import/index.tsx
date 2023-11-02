@@ -30,7 +30,7 @@ export function ImportModal({
     setErrorMessage("");
   }, [setErrorMessage, setStep]);
 
-  const [draftLink, setDraftLink] = useState(link);
+  const [draftLink, setDraftLink] = useState("");
   const [_, setLoading] = useState(false);
   const [__, setSuccess] = useState(false);
   const { dispatch } = useAppContext();
@@ -119,7 +119,7 @@ export function ImportModal({
           {label} Draft
         </p>
         <Dialog.Close
-          className="text-lg font-bold text-white"
+          className="text-2xl font-bold text-white"
           onClick={() => closeModal()}
           id="close-modal"
         >

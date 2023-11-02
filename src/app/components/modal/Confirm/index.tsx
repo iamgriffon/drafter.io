@@ -32,30 +32,41 @@ export function ConfirmModal({
   function handleClick() {
     setStep(1);
     onAccept(() => {
-      if (label === "Delete") setSuccessMessage("Sucessfuly Deleted!");
-      if (label === "Update") {
-        if (!userProps) return;
-        mutate(
-          {
-            link: link,
-            user_id: userProps.id,
-          },
-          {
-            onSuccess: () => {
-              if (data !== undefined) {
-                data.success.valueOf() === false &&
-                  setErrorMessage(data.message);
-                data.success.valueOf() === true &&
-                  setSuccessMessage(data.message);
-                setStep(2);
-              }
+      switch (label) {
+        case "Delete":
+          setSuccessMessage("Successfully Deleted!");
+          break;
+        case "Save":
+          if (!userProps) return;
+          mutate(
+            {
+              link: link,
+              user_id: userProps.id,
             },
-          },
-        );
+            {
+              onSuccess: () => {
+                if (data !== undefined) {
+                  if (data.success === false) {
+                    setErrorMessage(data.message);
+                  } else if (data.success === true) {
+                    setSuccessMessage(data.message);
+                    setStep(2);
+                  }
+                }
+              },
+            },
+          );
+          break;
+        case "Confirm":
+        case "Reset":
+          break;
+        default:
+          break;
       }
+
       setTimeout(() => {
         setStep(2);
-        if (label === "Create") closeModal();
+        closeModal();
       }, 200);
     });
   }
@@ -72,6 +83,15 @@ export function ConfirmModal({
     2: <FaCheck onClick={() => closeModal()} className="h-6 w-6 self-center" />,
   };
 
+  const ModalLabel = () => {
+    switch (label) {
+      case "Confirm":
+        return "Import Draft";
+      default:
+        return `${label} Draft`;
+    }
+  };
+
   return (
     <div
       id="modal-wrapper"
@@ -79,11 +99,11 @@ export function ConfirmModal({
     >
       <div className="flex items-start justify-between">
         <div className="mb-4 flex flex-col text-lg text-white shadow-black drop-shadow-lg">
-          {label} Draft{" "}
-          {label !== "Create" && <p className="font-thin">{name}</p>}
+          {ModalLabel()}
+          {label !== "Reset" && <p className="font-thin">{name}</p>}
         </div>
         <Dialog.Close
-          className="text-lg font-bold text-white"
+          className="text-2xl font-bold text-white"
           onClick={() => closeModal()}
           id="close-modal"
         >
@@ -94,14 +114,14 @@ export function ConfirmModal({
         <p id="modal-confirmation-text" className="text-white">
           Are you sure about that?
         </p>
-        <div className="mt-2 flex w-full items-center justify-between gap-2">
+        <div className="mt-6 flex w-full items-center justify-between gap-2">
           <button
             id="confirm-button"
             className="flex h-12 w-32 justify-center rounded-lg bg-green-500 font-bold text-white opacity-100 transition-colors hover:bg-green-600"
           >
             {buttonStepMap[step]}
           </button>
-          <button className="flex h-12 w-32 justify-center rounded-lg bg-red-500 font-bold text-white opacity-100 transition-colors hover:bg-red-600">
+          <button className="flex h-12 w-32 justify-center rounded-lg bg-red-500 font-bold text-white opacity-100 transition-colors hover:bg-red-800">
             <ImCross
               onClick={() => closeModal()}
               className="h-6 w-6 self-center"

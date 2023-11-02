@@ -119,7 +119,7 @@ export function RenameModal({
           {label} Draft
         </p>
         <Dialog.Close
-          className="text-lg font-bold text-white"
+          className="text-2xl font-bold text-white"
           onClick={() => closeModal()}
           id="close-modal"
         >

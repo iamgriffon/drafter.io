@@ -1,4 +1,8 @@
-import { type GameSeries } from "@/store/types";
+import { useAppContext } from "@/store/context";
+import { updateDraftID } from "@/store/draft/actions";
+import { selectGame, updateMenuSeries } from "@/store/menu/actions";
+import { type Series, type GameSeries } from "@/store/types";
+import { api } from "@/trpc/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useState, useCallback } from "react";
 import { type OperationsMapEnum } from "../navbar";
@@ -8,78 +12,67 @@ import { ImportModal } from "./Import";
 import { RenameModal } from "./Rename";
 import { ShareModal } from "./Share";
 
-export interface ModalPageProps {
+export interface BaseModalProps {
+  closeModal: () => void;
+  label: OperationsMapEnum;
+}
+
+interface Errors {
+  errorMessage: string;
+  setErrorMessage: (param: string) => void;
+}
+
+interface Success {
+  successMessage: string;
+  setSuccessMessage: (param: string) => void;
+}
+
+interface Messages extends Errors, Success {}
+
+export interface ModalPageProps extends BaseModalProps {
   open: boolean;
   name: string;
   setName: (param: string) => void;
-  closeModal: () => void;
-  label: OperationsMapEnum;
-  importDraft: (param: GameSeries) => void;
   link: string;
+  importDraft: (param: GameSeries) => void;
   setLink: (param: string) => void;
   onUpdateDraft: (param: () => void) => void;
   onDeleteDraft: (param: () => void) => void;
-  onCreateNew: (param: () => void) => void;
+  onResetDraft: (param: () => void) => void;
   id: string;
 }
 
-export interface ImportModalProps {
-  closeModal: () => void;
-  label: OperationsMapEnum;
+export interface ImportModalProps extends BaseModalProps, Errors {
   importDraft: (param: GameSeries) => void;
-  link: string;
   setLink: (param: string) => void;
   step: number;
   setStep: (param: number) => void;
-  errorMessage: string;
-  setErrorMessage: (param: string) => void;
+  link: string;
 }
 
-export interface ExportModalProps {
-  closeModal: () => void;
-  label: OperationsMapEnum;
+export interface ExportModalProps extends BaseModalProps, Messages {
   setLink: (param: string) => void;
-  errorMessage: string;
-  setErrorMessage: (param: string) => void;
-  successMessage: string;
-  setSuccessMessage: (param: string) => void;
 }
 
-export interface ShareModalProps {
-  closeModal: () => void;
-  label: OperationsMapEnum;
+export interface ShareModalProps extends BaseModalProps, Success {
   link: string;
   step: number;
   setStep: (param: number) => void;
-  successMessage: string;
-  setSuccessMessage: (param: string) => void;
 }
 
-export interface ConfirmModalProps {
-  closeModal: () => void;
-  label: OperationsMapEnum;
-  link: string;
+export interface ConfirmModalProps extends BaseModalProps, Messages {
   name: string;
   onAccept: (param: () => void) => void;
   step: number;
   setStep: (param: number) => void;
-  errorMessage: string;
-  setErrorMessage: (param: string) => void;
-  successMessage: string;
-  setSuccessMessage: (param: string) => void;
+  link: string;
 }
 
-export interface RenameModalProps {
-  closeModal: () => void;
-  label: OperationsMapEnum;
-  errorMessage: string;
-  setErrorMessage: (param: string) => void;
-  successMessage: string;
-  setSuccessMessage: (param: string) => void;
-  link: string;
+export interface RenameModalProps extends BaseModalProps, Messages {
   name: string;
   setName: (param: string) => void;
   id: string;
+  link: string;
 }
 
 export function Modal({
@@ -93,11 +86,22 @@ export function Modal({
   setName,
   onDeleteDraft,
   onUpdateDraft,
-  onCreateNew,
+  onResetDraft,
 }: ModalPageProps) {
   const [step, setStep] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const { refetch } = api.draft.import.useQuery(
+    {
+      link: link,
+    },
+    {
+      enabled: false,
+      refetchOnMount: false,
+    },
+  );
+
+  const { dispatch } = useAppContext();
 
   const updateSuccessMessage = useCallback((message: string) => {
     setSuccessMessage(message);
@@ -110,6 +114,38 @@ export function Modal({
   const updateErrorMessage = useCallback((message: string) => {
     setErrorMessage(message);
   }, []);
+
+  const onImportDraft = useCallback(async () => {
+    let draftLink = link;
+    setErrorMessage("");
+    setStep(1);
+    if (!draftLink.includes("https://")) {
+      draftLink = `https://drafter.io/${link}`;
+    }
+
+    return await refetch().then((res) => {
+      if (res.data?.data?.data) {
+        const parsedData = JSON.parse(JSON.stringify(res.data?.data.data));
+        dispatch({ type: "draft", action: updateDraftID(res.data.data.id) });
+        setLink(res.data.data.link);
+        res.data.data.data &&
+          typeof parsedData.series === "string" &&
+          dispatch({
+            type: "menu",
+            action: updateMenuSeries(parsedData.series as Series),
+          });
+        importDraft(parsedData as GameSeries);
+        setStep(2);
+        dispatch({ type: "menu", action: selectGame(1) });
+        setTimeout(() => {
+          closeModal();
+        }, 200);
+      } else if (res.data?.error) {
+        setErrorMessage(res.data?.error);
+        setStep(0);
+      }
+    });
+  }, [closeModal, importDraft, link, refetch, dispatch, setLink]);
 
   const ModalMap = {
     Import: (
@@ -162,7 +198,7 @@ export function Modal({
         setSuccessMessage={updateSuccessMessage}
       />
     ),
-    Update: (
+    Save: (
       <ConfirmModal
         closeModal={closeModal}
         link={link}
@@ -177,13 +213,13 @@ export function Modal({
         setSuccessMessage={updateSuccessMessage}
       />
     ),
-    Create: (
+    Reset: (
       <ConfirmModal
         closeModal={closeModal}
         link={link}
         label={label}
         name={name}
-        onAccept={onCreateNew}
+        onAccept={onResetDraft}
         step={step}
         setStep={updateStep}
         errorMessage={errorMessage}
@@ -204,6 +240,21 @@ export function Modal({
         name={name}
         setName={setName}
         id={id}
+      />
+    ),
+    Confirm: (
+      <ConfirmModal
+        closeModal={closeModal}
+        link={link}
+        label={label}
+        name={name}
+        onAccept={onImportDraft}
+        step={step}
+        setStep={updateStep}
+        errorMessage={errorMessage}
+        setErrorMessage={updateErrorMessage}
+        successMessage={successMessage}
+        setSuccessMessage={updateSuccessMessage}
       />
     ),
   };

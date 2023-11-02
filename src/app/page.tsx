@@ -23,7 +23,10 @@ import {
   updateDraftSeries,
   updateDraftGameWinner,
 } from "@/store/draft/actions";
-import { DEFAULT_CHAMPION_STATE } from "@/utils/setDefaultValues";
+import {
+  DEFAULT_CHAMPION_STATE,
+  PLACEHOLDER_CHAMPION,
+} from "@/utils/setDefaultValues";
 import {
   ChampionList,
   GameIndicator,
@@ -136,7 +139,11 @@ export default function Home() {
           currentMatch.blueSide.bans.some(
             (ban) => ban.champion.id === champ.id,
           );
-        champ.draftable = !isDrafted;
+        if (champ === PLACEHOLDER_CHAMPION) {
+          champ.draftable = true;
+        } else {
+          champ.draftable = !isDrafted;
+        }
         return champ;
       });
       return updatedChampions;

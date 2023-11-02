@@ -2,6 +2,7 @@
 
 import { useAppContext } from "@/store/context";
 import { type Champion } from "@/store/types";
+import { PLACEHOLDER_CHAMPION } from "@/utils/setDefaultValues";
 import Image from "next/image";
 
 interface ChampionListProps {
@@ -18,8 +19,10 @@ export function ChampionList({
   const { search, selected } = state.menu;
 
   const filteredChampions = [...champions].length
-    ? champions.filter((champion) =>
-        champion.name.toLowerCase().includes(search.toLowerCase()),
+    ? [PLACEHOLDER_CHAMPION].concat(
+        champions.filter((champion) =>
+          champion.name.toLowerCase().includes(search.toLowerCase()),
+        ),
       )
     : [];
 

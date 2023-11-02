@@ -3,6 +3,7 @@ import { updateFullDraft } from "@/store/draft/actions";
 import { storeDrafts, updateMenuSeries } from "@/store/menu/actions";
 import { type GameSeries } from "@/store/types";
 import { api } from "@/trpc/react";
+import { validateGameSeries } from "@/utils/checkForDraft";
 import { DEFAULT_BO1_STATE } from "@/utils/setDefaultValues";
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import * as Dialog from "@radix-ui/react-dialog";
@@ -24,9 +25,10 @@ export type OperationsMapEnum =
   | "Export"
   | "Share"
   | "Delete"
-  | "Update"
-  | "Create"
-  | "Rename";
+  | "Save"
+  | "Reset"
+  | "Rename"
+  | "Confirm";
 
 export function NavBar() {
   const user = useUser();
@@ -88,9 +90,12 @@ export function NavBar() {
       dispatch({ type: "menu", action: storeDrafts(response.data) });
   }, [dispatch, refetch]);
 
-  const onCreateNew = useCallback(
+  const onResetDraft = useCallback(
     (callback: () => void) => {
       dispatch({ type: "draft", action: updateFullDraft(DEFAULT_BO1_STATE) });
+      dispatch({ type: "menu", action: updateMenuSeries("BO1") });
+      setName("");
+      setLink("");
       callback();
     },
     [dispatch],
@@ -108,7 +113,7 @@ export function NavBar() {
 
   const importDraft = (param: GameSeries) => {
     dispatch({ type: "draft", action: updateFullDraft(param) });
-    dispatch({  type: "menu", action: updateMenuSeries(param.series)});
+    dispatch({ type: "menu", action: updateMenuSeries(param.series) });
   };
 
   const updated = () => {
@@ -129,6 +134,11 @@ export function NavBar() {
     setName(name);
   }, []);
 
+  const DropdownStyle =
+    "flex flex-row items-center justify-between text-gray-600 hover:text-gray-400";
+  const NavItemStyle =
+    "cursor-pointer font-bold text-gray-100 hover:text-gray-300 disabled:text-gray-500";
+
   return (
     <>
       <Dialog.Root defaultOpen={false} open={open}>
@@ -138,12 +148,12 @@ export function NavBar() {
             className="flex w-full max-w-[1440px] flex-row items-center justify-between self-center border-b-2 px-8 py-3"
           >
             <section className="flex flex-row gap-8">
-              <span
-                className="cursor-pointer font-bold text-gray-100 hover:text-gray-300"
+              <button
+                className={NavItemStyle}
                 onClick={() => openModal("Import")}
               >
                 {"Import"}
-              </span>
+              </button>
               {!!user.isSignedIn && (
                 <>
                   {!!user.isSignedIn &&
@@ -157,27 +167,36 @@ export function NavBar() {
                       {"Export"}
                     </button>
                   ) : null}
-                  <span
-                    onClick={() => openModal("Share")}
-                    className="cursor-pointer font-bold text-gray-100 hover:text-gray-300"
-                    id="share-button-button"
-                  >
-                    {"Share"}
-                  </span>
-                  <span
-                    onClick={() => openModal("Update")}
-                    className="cursor-pointer font-bold text-gray-100 hover:text-gray-300"
+                  <button
+                    onClick={() => openModal("Save")}
+                    className={NavItemStyle}
                     id="update-draft-button"
                   >
                     {"Save"}
-                  </span>
-                  <span
-                    className="cursor-pointer font-bold   text-gray-100 hover:text-gray-300"
-                    onClick={() => openModal("Create")}
-                    id="create-draft-button"
+                  </button>
+                  <button
+                    onClick={() => openModal("Share")}
+                    className={NavItemStyle}
+                    disabled={!link.trim().length}
+                    id="share-button-button"
                   >
-                    {"New"}
-                  </span>
+                    {"Share"}
+                  </button>
+                  <button
+                    className={NavItemStyle}
+                    onClick={() => openModal("Rename")}
+                    id="rename-draft-button"
+                    disabled={!name.trim().length}
+                  >
+                    {"Rename"}
+                  </button>
+                  <button
+                    className={NavItemStyle}
+                    onClick={() => openModal("Reset")}
+                    id="reset-draft-button"
+                  >
+                    {"Clear"}
+                  </button>
                 </>
               )}
             </section>
@@ -216,10 +235,10 @@ export function NavBar() {
                                 hideWhenDetached
                               >
                                 <DropdownMenu.Item
-                                  className="flex flex-row items-center justify-between text-gray-600 hover:text-gray-400"
+                                  className={DropdownStyle}
                                   textValue="Import"
                                   onClick={() => {
-                                    openModal("Import", () => {
+                                    openModal("Confirm", () => {
                                       setLink(draft.link);
                                       setName(draft.name);
                                     });
@@ -231,7 +250,7 @@ export function NavBar() {
                                 </DropdownMenu.Item>
                                 <DropdownMenu.Separator className="w-[80%] self-center border-t border-gray-300" />
                                 <DropdownMenu.Item
-                                  className="flex flex-row items-center justify-between text-gray-600 hover:text-gray-400"
+                                  className={DropdownStyle}
                                   textValue="Delete"
                                   onClick={() =>
                                     openModal("Share", () => {
@@ -246,7 +265,7 @@ export function NavBar() {
                                 </DropdownMenu.Item>
                                 <DropdownMenu.Separator className="w-[80%] self-center border-t border-gray-300" />
                                 <DropdownMenu.Item
-                                  className="flex flex-row items-center justify-between text-gray-600 hover:text-gray-400"
+                                  className={DropdownStyle}
                                   textValue="Delete"
                                   onClick={() => {
                                     setId(draft.id);
@@ -262,7 +281,7 @@ export function NavBar() {
                                 </DropdownMenu.Item>
                                 <DropdownMenu.Separator className="w-[80%] self-center border-t border-gray-300" />
                                 <DropdownMenu.Item
-                                  className="flex flex-row items-center justify-between text-gray-600 hover:text-gray-400"
+                                  className={DropdownStyle}
                                   textValue="Delete"
                                   onClick={() => {
                                     openModal("Rename", () => {
@@ -296,11 +315,7 @@ export function NavBar() {
                   )}
                 </DropdownMenu.Content>
               </DropdownMenu.Portal>
-              <IoMdSettings
-                size={24}
-                className="cursor-pointer fill-gray-100 hover:fill-gray-300"
-              />
-
+              |
               {!!user.isSignedIn && (
                 <section className="h-5 rounded-full">
                   <Image
@@ -313,6 +328,7 @@ export function NavBar() {
                   />
                 </section>
               )}
+              |
               <div id={user.isSignedIn ? "sign-out" : "sign-"}>
                 {!user.isSignedIn && <SignInButton />}
                 {!!user.isSignedIn && <SignOutButton />}
@@ -320,18 +336,18 @@ export function NavBar() {
             </section>
           </nav>
           <Modal
+            closeModal={() => setOpen(false)}
             open={open}
             label={label}
-            closeModal={() => setOpen(false)}
             importDraft={importDraft}
             link={link}
             setLink={updateLink}
             name={name}
+            id={id}
             setName={updateName}
             onDeleteDraft={onDeleteDraft}
             onUpdateDraft={onUpdateDraft}
-            onCreateNew={onCreateNew}
-            id={id}
+            onResetDraft={onResetDraft}
           />
         </DropdownMenu.Root>
       </Dialog.Root>
