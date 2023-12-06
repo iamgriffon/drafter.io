@@ -157,8 +157,8 @@ export function NavBar() {
               {!!user.isSignedIn && (
                 <>
                   {!!user.isSignedIn &&
-                  games.length > 0 &&
-                  selectedMatch !== null ? (
+                    games.length > 0 &&
+                    selectedMatch !== null ? (
                     <button
                       className="cursor-pointer font-bold   text-gray-100 hover:text-gray-300"
                       onClick={() => openModal("Export")}
@@ -190,15 +190,15 @@ export function NavBar() {
                   >
                     {"Rename"}
                   </button>
-                  <button
-                    className={NavItemStyle}
-                    onClick={() => openModal("Reset")}
-                    id="reset-draft-button"
-                  >
-                    {"Clear"}
-                  </button>
                 </>
               )}
+              <button
+                className={NavItemStyle}
+                onClick={() => openModal("Reset")}
+                id="reset-draft-button"
+              >
+                {"Clear"}
+              </button>
             </section>
             <section className="flex flex-row gap-4">
               {!!user.isSignedIn && (
