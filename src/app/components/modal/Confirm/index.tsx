@@ -63,11 +63,10 @@ export function ConfirmModal({
         default:
           break;
       }
-
       setTimeout(() => {
         setStep(2);
         closeModal();
-      }, 200);
+      }, 50);
     });
   }
 
