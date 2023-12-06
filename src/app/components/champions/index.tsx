@@ -20,11 +20,19 @@ export function ChampionList({
 
   const filteredChampions = [...champions].length
     ? [PLACEHOLDER_CHAMPION].concat(
-        champions.filter((champion) =>
-          champion.name.toLowerCase().includes(search.toLowerCase()),
-        ),
-      )
+      champions.filter((champion) =>
+        champion.name.toLowerCase().includes(search.toLowerCase()),
+      ),
+    )
     : [];
+
+    function truncateString(str: String, maxLength: number) {
+      if (str.length > maxLength) {
+        return str.substring(0, maxLength) + '...';
+      } else {
+        return str;
+      }
+    }
 
   return (
     <div
@@ -37,11 +45,10 @@ export function ChampionList({
           filteredChampions.map((champion, index) => (
             <div
               key={index}
-              className={`${
-                champion.name === selected.champion.name
+              className={`${champion.name === selected.champion.name
                   ? "border-2 border-white"
                   : ""
-              } cursor-pointer`}
+                } cursor-pointer`}
             >
               {champion.draftable === true && (
                 <Image
@@ -67,6 +74,9 @@ export function ChampionList({
                   id="champion-placeholder-img"
                 />
               )}
+              <p className="text-sm mt-1">
+                {champion.name !== 'PLACEHOLDER' ? truncateString(champion.name, 10) : '\u00A0'}
+              </p>
             </div>
           ))
         ) : (
