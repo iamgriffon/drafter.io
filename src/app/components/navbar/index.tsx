@@ -315,9 +315,8 @@ export function NavBar() {
                   )}
                 </DropdownMenu.Content>
               </DropdownMenu.Portal>
-              |
               {!!user.isSignedIn && (
-                <section className="h-5 rounded-full">
+                <section className="h-5 rounded-full border-r-[1px] border-white">
                   <Image
                     src={userProps?.imageUrl!}
                     className="cursor-pointer rounded-full"
@@ -328,7 +327,6 @@ export function NavBar() {
                   />
                 </section>
               )}
-              |
               <div id={user.isSignedIn ? "sign-out" : "sign-"}>
                 {!user.isSignedIn && <SignInButton />}
                 {!!user.isSignedIn && <SignOutButton />}
